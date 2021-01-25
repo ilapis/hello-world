@@ -1,36 +1,9 @@
 <?php
 
-function view(array $views, string $position) {
-    foreach ( $views[$position] as $view ) {
-        $model = $view["model"];
-        include __DIR__ . "/../templates/" . $view["template"];
-    }
-}
+include __DIR__ . "/../bootstrap.php";
 
-$views = [];
+$container = new App\Container;
 
-$views["partial/header"][] = [
-    "template" => "partials/header.tpl",
-    "model" => [
-        "title" => "Homepage",
-    ],
-];
+$container->executeMethod('App\Controller\HomePageController::index');
+//$container->executeMethod('App\Controller\ProductPageController::index');
 
-$views["center"][] = [
-    "template" => "menu.tpl",
-    "model" => [],
-];
-
-$views["center"][] = [
-    "template" => "message.tpl",
-    "model" => [
-        "text" => "Hello world",
-    ],
-];
-
-$views["partial/footer"][] = [
-    "template" => "partials/footer.tpl",
-    "model" => [],
-];
-
-include __DIR__ . "/../layouts/default/homepage.php";
