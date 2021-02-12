@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Abstract\DefaultController;;
-use App\Model\ProductModel;;
+use App\Abstract\DefaultController;
+use App\Model\ProductModel;
 
 class ProductPageController extends DefaultController {
 

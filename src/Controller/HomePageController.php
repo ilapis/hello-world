@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Abstract\DefaultController;;
+use App\Abstract\DefaultController;
 
 class HomePageController extends DefaultController {
 
