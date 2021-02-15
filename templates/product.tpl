@@ -1,4 +1,7 @@
+<div class="row" >
 PRODUCT
 <?php
-
-echo $model["text"];
+print_r($model);
+//echo $model["text"];
+?>
+</div>

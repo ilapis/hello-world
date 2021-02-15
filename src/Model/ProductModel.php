@@ -2,15 +2,17 @@
 
 namespace App\Model;
 
-//use App\Abstract\DefaultModel;
+use App\Abstract\DefaultModel;
 
-class ProductModel /*extends DefaultModel*/ {
+class ProductModel extends DefaultModel {
 
-    function getProductData() {
+    public function getProductData() {
 
-        return [
-            "text" => "Hello product",
-        ];
+        return $this->get(
+            table: "products",
+            collumns: ["sku", "code", "title"],
+            where: ["sku" => "200_1"],
+        );
     }
 
 }

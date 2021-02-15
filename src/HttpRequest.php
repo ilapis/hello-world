@@ -44,6 +44,10 @@ class HttpRequest {
         return $this->_body;
     }
 
+    public function getJson(): array {
+        return json_decode($this->_body, true);
+    }
+
     public function getFiles(): array {
         return $this->_files;
     }
