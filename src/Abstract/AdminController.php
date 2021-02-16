@@ -2,11 +2,9 @@
 
 namespace App\Abstract;
 
-use App\Abstract\Controller;
-
 abstract class AdminController extends Controller {
 
-    public  $layout = "admin";
+    public string $layout = "admin";
 
     public function __construct() {
 

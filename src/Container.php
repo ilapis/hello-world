@@ -7,17 +7,14 @@ class Container
     /**
      * @var array
      */
-    protected $instances = [];
+    protected array $instances = [];
+
     /**
-     * @param      $abstract
-     * @param null $concrete
+     * @param string $abstract
      */
-    public function set($abstract, $concrete = null)
+    public function set(string $abstract, /*$concrete = null*/): void
     {
-        if ($concrete === null) {
-            $concrete = $abstract;
-        }
-        $this->instances[$abstract] = $concrete;
+        $this->instances[$abstract] = $abstract;
     }
 
     /**
@@ -26,13 +23,15 @@ class Container
      * @return object
      * @throws \ReflectionException
      */
-    public function get($abstract, $parameters = [])
+    public function get(string $abstract, $parameters = []): ?object
     {
         // if we don't have it, just register it
         if (!isset($this->instances[$abstract])) {
             $this->set($abstract);
         }
-        return $this->resolve($this->instances[$abstract], $parameters);
+
+        //return $this->resolve($this->instances[$abstract], $parameters);
+        return $this->resolve($abstract, $parameters);
     }
 
     /**
@@ -41,12 +40,12 @@ class Container
      * @return object
      * @throws \ReflectionException
      */
-    public function resolve($concrete, $parameters)
+    public function resolve(string|\Closure $concrete, array $parameters): object
     {
-        if ($concrete instanceof \Closure) {
+        if ( $concrete instanceof \Closure) {
             return $concrete($this, $parameters);
         }
-        
+
         try {
             $reflector = new \ReflectionClass($concrete);
         } catch (\ReflectionException $e) {
@@ -54,7 +53,7 @@ class Container
             exit(0);
         }
         // check if class is instantiable
-        if (!$reflector->isInstantiable()) {
+        if (!$reflector->isInstantiable() && is_string($concrete) ) {
             throw new \Exception("Class {$concrete} is not instantiable");
         }
         // get class constructor
@@ -75,7 +74,7 @@ class Container
      * @return array
      * @throws \ReflectionException
      */
-    public function getDependencies($parameters)
+    public function getDependencies(array $parameters)
     {
         $dependencies = [];
         foreach ($parameters as $parameter) {
@@ -102,11 +101,14 @@ class Container
         $exploded = explode("::", $namespace);
         $class = $this->get($exploded[0]);
         $method = $exploded[1];
-        $reflection = new \ReflectionMethod($class, $method);
+
         $parameters = [];
-        
-        foreach ($reflection->getParameters() as $parameter) {
-            $parameters[] = $this->get((string) $parameter->getType());
+        if ( $class !== null) {
+            $reflection = new \ReflectionMethod($class, $method);
+
+            foreach ($reflection->getParameters() as $parameter) {
+                $parameters[] = $this->get((string)$parameter->getType());
+            }
         }
         
         $func = array($class, $method);

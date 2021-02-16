@@ -2,11 +2,9 @@
 
 namespace App\Abstract;
 
-use App\Abstract\Controller;;
-
 abstract class DefaultController extends Controller {
 
-    public  $layout = "default";
+    public string $layout = "default";
 
     public function __construct() {
 

@@ -2,8 +2,6 @@
 
 namespace App\Abstract;
 
-use App\Abstract\Model;
-
 class DefaultModel extends Model {
 
     public function get(string $table, array $collumns = null, array $where = null): array
@@ -25,11 +23,13 @@ class DefaultModel extends Model {
         }
 
         $partial_collumns = "";
-        foreach ( $collumns as $collumn ) {
-            if ( $partial_collumns == "" ) {
-                $partial_collumns = "`" . strtr($collumn, ["`" => "\`"]) . "`";
-            } else {
-                $partial_collumns .= ", `" . strtr($collumn, ["`" => "\`"]) . "`";
+        if ( $collumns !== null ) {
+            foreach ($collumns as $collumn) {
+                if ($partial_collumns == "") {
+                    $partial_collumns = "`" . strtr($collumn, ["`" => "\`"]) . "`";
+                } else {
+                    $partial_collumns .= ", `" . strtr($collumn, ["`" => "\`"]) . "`";
+                }
             }
         }
 

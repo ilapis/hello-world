@@ -20,8 +20,8 @@ class HttpRequest {
         $this->_files = $_FILES;
     }
 
-    public function getParameter($key): ?string {
-        return $this->_parameters[$key] ?? null;
+    public function getParameter(string $key): string {
+        return $this->_parameters[$key] ?? '';
     }
 
     public function getMethod(): string {

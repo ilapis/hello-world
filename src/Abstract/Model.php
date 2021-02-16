@@ -2,7 +2,7 @@
 
 namespace App\Abstract;
 
-abstract class Model {
+abstract class Model implements \App\Interfaces\ModelInterface {
 
     protected false|\mysqli $db;
 
@@ -17,20 +17,30 @@ abstract class Model {
 
     protected function query(string $query): array
     {
-        $stmt = $this->db->query($query);
+        $stmt = false;
 
-        $result = [];
-        while ($row = $stmt->fetch_assoc()) {
-            $result[] = $row;
+        if ( $this->db ) {
+            $stmt = $this->db->query($query);
         }
 
-        $stmt->free();
+        $result = [];
+
+        if ( $stmt instanceof \mysqli_result ) {
+            while ($row = $stmt->fetch_assoc()) {
+                $result[] = $row;
+            }
+
+            $stmt->free();
+        }
+
 
         return $result;
     }
 
     public function __deconstruct()
     {
-        $this->db->close();
+        if ( $this->db ) {
+            $this->db->close();
+        }
     }
 }

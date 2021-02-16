@@ -6,7 +6,8 @@ use App\Abstract\DefaultController;
 
 class HomePageController extends DefaultController {
 
-    function index() {
+    public function index(): void
+    {
 
         $this->addView(
             "message.tpl",

@@ -13,7 +13,8 @@ class ProductPageController extends DefaultController {
         parent::__construct();
     }
 
-    function index() {
+    public function index(): void
+    {
 
         $this->addView(
             "product.tpl",

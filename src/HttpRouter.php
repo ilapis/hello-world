@@ -2,14 +2,14 @@
 
 namespace App;
 
-use App\HttpRequest;
+use App\Interfaces\HttpRouterInterface;
 
-class HttpRouter {
+class HttpRouter implements HttpRouterInterface {
 
-    private array $_routes;
+    private array $_routes = [];
 
     public function __construct(
-        private HttpRequest $request
+        private HttpRequest $request,
     ) {}
 
     public function add(string $url, string $namespace, array $methods = []): HttpRouter {

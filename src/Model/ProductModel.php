@@ -6,7 +6,8 @@ use App\Abstract\DefaultModel;
 
 class ProductModel extends DefaultModel {
 
-    public function getProductData() {
+    public function getProductData(): array
+    {
 
         return $this->get(
             table: "products",

@@ -14,7 +14,8 @@ class LoginPageController extends AdminController {
         parent::__construct();
     }
 
-    function index() {
+    public function index(): void
+    {
 
         $this->addView(
             "login_admin.tpl",
@@ -23,11 +24,12 @@ class LoginPageController extends AdminController {
         $this->output();
     }
 
-    function post(HttpRequest $httpRequest) {
+    function post(HttpRequest $httpRequest):void
+    {
         echo json_encode(
             $this->model->getHash(
                 $httpRequest->getJson()['username']
-            )[0]
+            )
         );
     }
 }

@@ -2,23 +2,28 @@
 
 namespace App\Abstract;
 
-abstract class Controller {
+use App\Interfaces\ControllerInterface;
 
-    public  $layout = "default";
-    private $views = [];
+abstract class Controller implements ControllerInterface {
 
-    protected function output() {
+    public string $layout = "default";
+    private array $views = [];
+
+    public function output(): void
+    {
         include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
     }
 
-    public function addView(string $template, array $model = [], string $position = "center") {
+     function addView(string $template, array $model = [], string $position = "center"): void
+    {
         $this->views[$position][] = [
             "template" => $template,
             "model" => $model,
         ];
     }
 
-    public function view(string $position) {
+    public function view(string $position): void
+    {
         foreach ( $this->views[$position] as $view ) {
             $model = $view["model"];
             include __DIR__ . "/../../templates/" . $view["template"];
