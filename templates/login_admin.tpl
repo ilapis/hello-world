@@ -18,8 +18,8 @@
                 },
                 input: {
                     id: 'username',
-                        name: 'username',
-                        type: 'text'
+                    name: 'username',
+                    type: 'text'
                 },
                 validator: {
                     required: true

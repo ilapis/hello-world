@@ -5,6 +5,9 @@ namespace App\Controller\Admin;
 use App\Abstract\AdminController;
 use App\Model\LoginModel;
 use App\HttpRequest;
+use App\Security\Roles;
+use App\Security\Access;
+use WB\Security\Authorization;
 
 class LoginPageController extends AdminController {
 
@@ -24,12 +27,30 @@ class LoginPageController extends AdminController {
         $this->output();
     }
 
-    function post(HttpRequest $httpRequest):void
+    function post(HttpRequest $httpRequest): void
     {
-        echo json_encode(
-            $this->model->getHash(
-                $httpRequest->getJson()['username']
-            )
-        );
+        $administrator = $this->model->getAdministrator($httpRequest->getJson()['username']);
+
+        if ( password_verify(
+            $httpRequest->getJson()['password'],
+            $administrator['password_hash'])
+        ) {
+
+            Authorization::setRole(Roles::ADMIN);
+            Authorization::setAccess(Access::ADMIN);
+
+            $this->response([
+                "valid" => true,
+                "action" => "redirect",
+                "redirect" => "/admin/dashboard",
+            ]);
+        }
+
+        $this->response([
+            "valid" => false,
+            "action" => "message",
+            "element" => "#message_error",
+            "message" => "Invalid login credentials",
+        ]);
     }
 }

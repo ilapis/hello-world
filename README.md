@@ -12,3 +12,4 @@ To update database and create tables:
 
 vendor/bin/phinx migrate -e development
 
+vendor/bin/phinx seed:run

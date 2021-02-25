@@ -1,9 +1,10 @@
 {
     "require": {
         "robmorgan/phinx": "^0.12.5",
-        "vlucas/phpdotenv": "^5.3"
+        "vlucas/phpdotenv": "^5.3",
+        "fzaninotto/faker": "^1.5"
     },
     "require-dev": {
-        "vimeo/psalm": "^4.5"
+        "vimeo/psalm": "^4.6"
     }
 }

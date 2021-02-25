@@ -53,7 +53,7 @@ class Container
             exit(0);
         }
         // check if class is instantiable
-        if (!$reflector->isInstantiable() && is_string($concrete) ) {
+        if (!$reflector->isInstantiable()) {
             throw new \Exception("Class {$concrete} is not instantiable");
         }
         // get class constructor

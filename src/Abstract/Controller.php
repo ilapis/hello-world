@@ -30,4 +30,10 @@ abstract class Controller implements ControllerInterface {
         }
     }
 
+    public function response(array $array): void
+    {
+        header('Content-Type: application/json');
+        echo json_encode($array);
+        exit(0);
+    }
 }
