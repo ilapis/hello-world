@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace WB\Security;
+namespace App\Security;
 
 class Authorization
 {
@@ -9,11 +9,9 @@ class Authorization
         return $_SESSION['AUTHORIZATION_ROLE'] ?? Roles::ANONYMOUS;
     }
     
-    public static function setRole(string $role): void//Authorization
+    public static function setRole(string $role): void
     {
         $_SESSION['AUTHORIZATION_ROLE'] = strtoupper($role);
-        
-        //return $this;
     }
     
     public static function getAccess(): string
@@ -21,11 +19,9 @@ class Authorization
         return $_SESSION['AUTHORIZATION_ACCESS'] ??  Access::PUBLIC;
     }
     
-    public static function setAccess(string $access): void//Authorization
+    public static function setAccess(string $access): void
     {
         $_SESSION['AUTHORIZATION_ACCESS'] =  strtoupper($access);
-        
-        //return $this;
     }
     
     public function setControllersAccess(array $controllers)

@@ -7,7 +7,7 @@ use App\Model\LoginModel;
 use App\HttpRequest;
 use App\Security\Roles;
 use App\Security\Access;
-use WB\Security\Authorization;
+use App\Security\Authorization;
 
 class LoginPageController extends AdminController {
 
@@ -36,7 +36,7 @@ class LoginPageController extends AdminController {
             $administrator['password_hash'])
         ) {
 
-            Authorization::setRole(Roles::ADMIN);
+            Authorization::setRole(Roles::ADMINISTRATOR);
             Authorization::setAccess(Access::ADMIN);
 
             $this->response([

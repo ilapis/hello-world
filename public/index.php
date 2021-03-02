@@ -1,7 +1,12 @@
 <?php
 
+session_start();
+
 include __DIR__ . "/../vendor/autoload.php";
 include __DIR__ . "/../bootstrap.php";
+
+use App\Security\Roles;
+use App\Security\Access;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -23,6 +28,12 @@ $router
         url: '/admin/login',
         namespace: 'App\Controller\Admin\LoginPageController::post',
         methods: ["POST"],
+    )
+    ->add(
+        url: '/admin/dashboard',
+        namespace: 'App\Controller\Admin\DashboardPageController::index',
+        access: [ACCESS::ADMIN],
+        roles: [ROLES::ADMINISTRATOR],
     )
     ->add(
         url: '/product',

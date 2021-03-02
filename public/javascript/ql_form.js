@@ -35,8 +35,11 @@ async function postData(url = '', data = {}) {
                         data[$(this).attr('name')] = $(this).val();
                     } );
 
-                    postData( form.action, data ).then(data => {
-                        console.log(data);
+                    postData( form.action, data ).then(response => {
+                        if ( response.action == "redirect" ) {
+                            window.location.replace(response.redirect);
+                        }
+
                     });
 
                 }
