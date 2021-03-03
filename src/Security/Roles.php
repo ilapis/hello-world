@@ -6,4 +6,5 @@ class Roles
 {
     const ANONYMOUS = "ANONYMOUS";
     const ADMINISTRATOR = "ADMINISTRATOR";
+    const MASTER = "MASTER";
 }

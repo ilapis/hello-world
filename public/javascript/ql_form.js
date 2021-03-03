@@ -1,3 +1,4 @@
+/*
 async function postData(url = '', data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
@@ -15,7 +16,7 @@ async function postData(url = '', data = {}) {
     });
     return response.json(); // parses JSON response into native JavaScript objects
 }
-
+*/
 (function( $ ) {
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -65,5 +66,22 @@ async function postData(url = '', data = {}) {
             });
         });
     };
+
+    async function postData(url = '', data = {}) {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
+        });
+
+        return response.json();
+    }
 
 }( jQuery ));

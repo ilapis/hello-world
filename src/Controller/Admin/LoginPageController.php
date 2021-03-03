@@ -20,11 +20,12 @@ class LoginPageController extends AdminController {
     public function index(): void
     {
 
-        $this->addView(
-            "login_admin.tpl",
-        );
-
-        $this->output();
+        $this
+            ->addView(
+                template: "login_admin.tpl"
+            )
+            ->output()
+        ;
     }
 
     function post(HttpRequest $httpRequest): void

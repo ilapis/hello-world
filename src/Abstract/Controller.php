@@ -14,12 +14,14 @@ abstract class Controller implements ControllerInterface {
         include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
     }
 
-     function addView(string $template, array $model = [], string $position = "center"): void
+     function addView(string $template, array $model = [], string $position = "center"): ControllerInterface
     {
         $this->views[$position][] = [
             "template" => $template,
             "model" => $model,
         ];
+
+        return $this;
     }
 
     public function view(string $position): void

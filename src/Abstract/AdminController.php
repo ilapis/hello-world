@@ -8,19 +8,20 @@ abstract class AdminController extends Controller {
 
     public function __construct() {
 
-        $this->addView(
-            "partials/header_admin.tpl",
-            [
+        $this
+            ->addView(
+                template: "partials/header_admin.tpl",
+                model:
+                [
                 "title" => "Homepage",
-            ],
-            "partial/header"
-        );
-
-        $this->addView(...[
-                "template" => "partials/footer_admin.tpl",
-                "position" => "partial/footer",
-            ]
-        );
+                ],
+                position: "partial/header"
+            )
+            ->addView(
+                template: "partials/footer_admin.tpl",
+                position:  "partial/footer",
+            )
+        ;
     }
 
 }

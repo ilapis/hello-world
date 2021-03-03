@@ -6,7 +6,7 @@ class CSRF
 {
     private $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     
-    public function generate($strength = 32)
+    public function generate(int $strength = 32): string
     {
         $input_length = strlen($this->permitted_chars);
         $random_string = '';
