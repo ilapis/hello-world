@@ -30,6 +30,10 @@ $router
         methods: ["POST"],
     )
     ->add(
+        url: '/admin/logout',
+        namespace: 'App\Controller\Admin\LoginPageController::logout',
+    )
+    ->add(
         url: '/admin/dashboard',
         namespace: 'App\Controller\Admin\DashboardPageController::index',
         access: [ACCESS::ADMIN],

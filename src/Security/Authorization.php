@@ -40,7 +40,7 @@ class Authorization
 		return false;
 	}
     
-    public function destroy(): void
+    public static function destroy(): void
     {
         session_destroy();
     }

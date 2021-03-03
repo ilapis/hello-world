@@ -18,6 +18,10 @@ abstract class AdminController extends Controller {
                 position: "partial/header"
             )
             ->addView(
+                template: "partials/sidebar_admin.tpl",
+                position:  "sidebar",
+            )
+            ->addView(
                 template: "partials/footer_admin.tpl",
                 position:  "partial/footer",
             )

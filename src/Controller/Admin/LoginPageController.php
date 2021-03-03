@@ -28,7 +28,13 @@ class LoginPageController extends AdminController {
         ;
     }
 
-    function post(HttpRequest $httpRequest): void
+    public function logout(): void
+    {
+        Authorization::destroy();
+        header("location: /admin");
+    }
+
+    public function post(HttpRequest $httpRequest): void
     {
         $administrator = $this->model->getAdministrator($httpRequest->getJson()['username']);
 
