@@ -24,7 +24,7 @@ class Authorization
         $_SESSION['AUTHORIZATION_ACCESS'] =  strtoupper($access);
     }
     
-    public function setControllersAccess(array $controllers)
+    public function setControllersAccess(array $controllers): void
     {
         $_SESSION['AUTHORIZATION_CONTROLLERS'] =  $controllers;
 	}

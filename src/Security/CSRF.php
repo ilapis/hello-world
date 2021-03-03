@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace WB\Security;
+namespace App\Security;
 
 class CSRF
 {
-    private $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private string $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     
     public function generate(int $strength = 32): string
     {
