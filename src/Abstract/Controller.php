@@ -11,6 +11,9 @@ abstract class Controller implements ControllerInterface {
 
     public function output(): void
     {
+        /**
+         * @psalm-suppress UnresolvableInclude
+         */
         include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
     }
 
@@ -28,7 +31,10 @@ abstract class Controller implements ControllerInterface {
     {
         foreach ( $this->views[$position] as $view ) {
             $model = $view["model"];
-            include __DIR__ . "/../../templates/" . $view["template"];
+            /**
+             * @psalm-suppress UnresolvableInclude
+             */
+            include sprintf(__DIR__ . "/../../templates/" . $view["template"] );
         }
     }
 

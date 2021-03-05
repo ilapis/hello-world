@@ -10,20 +10,30 @@ abstract class AdminController extends Controller {
 
         $this
             ->addView(
-                template: "partials/header_admin.tpl",
+                template: "partials/admin/header.tpl",
                 model:
                 [
                 "title" => "Homepage",
                 ],
-                position: "partial/header"
+                position: "partial/admin/header"
             )
             ->addView(
-                template: "partials/sidebar_admin.tpl",
+                template: "partials/admin/sidebar.tpl",
+                model: ["links" => [
+                        [
+                        "text" => "Article",
+                        "href" => "/admin/article",
+                        ],
+                        [
+                        "text" => "Category",
+                        "href" => "/admin/category",
+                        ]
+                ]],
                 position:  "sidebar",
             )
             ->addView(
-                template: "partials/footer_admin.tpl",
-                position:  "partial/footer",
+                template: "partials/admin/footer.tpl",
+                position:  "partial/admin/footer",
             )
         ;
     }

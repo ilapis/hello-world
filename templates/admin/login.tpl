@@ -38,7 +38,7 @@
                 input: {
                     id: 'password',
                     name: 'password',
-                    type: 'text'
+                    type: 'password'
                 },
                 validator: {
                     required: true

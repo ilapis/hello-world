@@ -22,7 +22,7 @@ class LoginPageController extends AdminController {
 
         $this
             ->addView(
-                template: "login_admin.tpl"
+                template: "admin/login.tpl"
             )
             ->output()
         ;

@@ -46,8 +46,12 @@ class Container
             return $concrete($this, $parameters);
         }
 
+        if( !class_exists($concrete, true) ) {
+            exit(0);
+        }
+
         try {
-            $reflector = new \ReflectionClass($concrete);
+                $reflector = new \ReflectionClass($concrete);
         } catch (\ReflectionException $e) {
             echo $e->getFile() . " " . $e->getLine() . ": " .$e->getMessage();
             exit(0);

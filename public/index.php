@@ -40,6 +40,16 @@ $router
         roles: [ROLES::ADMINISTRATOR],
     )
     ->add(
+        url: '/admin/article',
+        namespace: 'App\Controller\Admin\ArticlePageController::index',
+        access: [ACCESS::ADMIN],
+        roles: [ROLES::ADMINISTRATOR],
+    )
+    ->add(
+        url: '/product',
+        namespace: 'App\Controller\ProductPageController::index',
+    )
+    ->add(
         url: '/product',
         namespace: 'App\Controller\ProductPageController::index',
     )

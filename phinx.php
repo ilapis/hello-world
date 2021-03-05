@@ -13,15 +13,15 @@ return
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_environment' => 'development',
-        'development' => [
+        'default_environment' => $_ENV['ENVIRONMENT'],
+        $_ENV['ENVIRONMENT'] => [
             'adapter' => 'mysql',
             'host' => $_ENV['MYSQL_HOST'],
             'name' => $_ENV['MYSQL_DATABASE'],
             'user' => $_ENV['MYSQL_USER'],
             'pass' => $_ENV['MYSQL_PASSWORD'],
-            'port' => '3306',
-            'charset' => 'utf8',
+            'port' => $_ENV['MYSQL_PORT'],
+            'charset' => $_ENV['MYSQL_CHARSET'],
         ]
     ],
     'version_order' => 'creation'
