@@ -11,7 +11,7 @@
 
 <?php if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) { ?>
 
-<script src="/javascript/sticky-table/dist/js/sticky-table.min.js"></script>
+<script src="/javascript/sticky-table.min.js"></script>
 <script src="/javascript/ql_table.js"></script>
 
 <?php } ?>

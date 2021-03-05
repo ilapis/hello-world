@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
 
 <?php if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) { ?>
-    <link href="/javascript/sticky-table/dist/css/sticky-table.min.css" rel="stylesheet" />
+    <link href="/css/sticky-table.min.css" rel="stylesheet" />
 <?php } ?>
 
     <title><?=$model["title"];?></title>
