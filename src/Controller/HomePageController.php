@@ -9,14 +9,14 @@ class HomePageController extends DefaultController {
     public function index(): void
     {
 
-        $this->addView(
+        $this/*
+            ->addView(
             "message.tpl",
-            [
-                "text" => "Hello world",
-            ],
-        );
-
-        $this->output();
+                [
+                    "text" => "Hello world",
+                ],
+            )*/
+            ->output();
     }
 
 }

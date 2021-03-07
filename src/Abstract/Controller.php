@@ -29,12 +29,14 @@ abstract class Controller implements ControllerInterface {
 
     public function view(string $position): void
     {
-        foreach ( $this->views[$position] as $view ) {
-            $model = $view["model"];
-            /**
-             * @psalm-suppress UnresolvableInclude
-             */
-            include sprintf(__DIR__ . "/../../templates/" . $view["template"] );
+        if ( isset($this->views[$position]) ) {
+            foreach ($this->views[$position] as $view) {
+                $model = $view["model"];
+                /**
+                 * @psalm-suppress UnresolvableInclude
+                 */
+                include sprintf(__DIR__ . "/../../templates/" . $view["template"]);
+            }
         }
     }
 

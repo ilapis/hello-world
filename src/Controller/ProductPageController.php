@@ -16,12 +16,12 @@ class ProductPageController extends DefaultController {
     public function index(): void
     {
 
-        $this->addView(
-            "product.tpl",
-            $this->model->getProductData()
-        );
-
-        $this->output();
+        $this
+            ->addView(
+                template: "product.tpl",
+                model: $this->model->getProductData(),
+            )
+            ->output();
     }
 
 }

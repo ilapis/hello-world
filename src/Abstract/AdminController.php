@@ -13,7 +13,7 @@ abstract class AdminController extends Controller {
                 template: "partials/admin/header.tpl",
                 model:
                 [
-                "title" => "Homepage",
+                "title" => "Administrator",
                 ],
                 position: "partial/admin/header"
             )

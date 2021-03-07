@@ -41,6 +41,7 @@ services:
       - backend
     volumes:
       - ./docker/mysql/:/var/lib/mysql/
+      
 networks:
   frontend:
     driver: bridge
