@@ -2,6 +2,14 @@
 
 Create .env form .env.example and change passwords
 
+## Enviroments
+
+### Local / Development enviroment
+docker-compose -f docker-compose.yml.development up -d
+
+### Staging / Production
+docker-compose -f docker-compose.yml.production up -d
+
 ### Execute:
 
 composer install
@@ -10,9 +18,8 @@ composer dump-autoload
 
 ####To update database and create tables:
 
-vendor/bin/phinx migrate
-
-vendor/bin/phinx seed:run
+vendor/bin/phinx migrate -e development
+vendor/bin/phinx seed:run -e development
 
 ####To analyze PHP Code
 
@@ -20,4 +27,7 @@ vendor/bin/phinx seed:run
 
 ####To execute PHP Unit tests:
 
-./vendor/bin/phpunit ./tests/phpunit/*
+cd ./tests
+composer install
+
+php ./vendor/bin/phpunit ./tests/phpunit/*

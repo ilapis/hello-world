@@ -3,57 +3,29 @@
 session_start();
 
 include __DIR__ . "/../vendor/autoload.php";
-include __DIR__ . "/../bootstrap.php";
-
-use App\Security\Roles;
-use App\Security\Access;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $container = new App\Container;
 
-$router = $container->get('App\HttpRouter');
+/* If website is not of environment or testing stop it */
+if ( !in_array( $_SERVER["HTTP_HOST"], [$_ENV["WEBSITE_URL_TESTING"] ?? null,$_ENV["WEBSITE_URL"], "apache"]) ) {
+    $container->executeMethod('App\Controller\ErrorPageController::unregisteredWebsite');
+}
 
-$router
-    ->add(
-        url: '/',
-        namespace: 'App\Controller\HomePageController::index',
-    )
-    ->add(
-        url: '/admin',
-        namespace: 'App\Controller\Admin\LoginPageController::index',
-    )
-    ->add(
-        url: '/admin/login',
-        namespace: 'App\Controller\Admin\LoginPageController::post',
-        methods: ["POST"],
-    )
-    ->add(
-        url: '/admin/logout',
-        namespace: 'App\Controller\Admin\LoginPageController::logout',
-    )
-    ->add(
-        url: '/admin/dashboard',
-        namespace: 'App\Controller\Admin\DashboardPageController::index',
-        access: [ACCESS::ADMIN],
-        roles: [ROLES::ADMINISTRATOR],
-    )
-    ->add(
-        url: '/admin/article',
-        namespace: 'App\Controller\Admin\ArticlePageController::index',
-        access: [ACCESS::ADMIN],
-        roles: [ROLES::ADMINISTRATOR],
-    )
-    ->add(
-        url: '/product',
-        namespace: 'App\Controller\ProductPageController::index',
-    )
-    ->add(
-        url: '/product',
-        namespace: 'App\Controller\ProductPageController::index',
-    )
-;
+if ( $_SERVER["HTTP_HOST"] != $_ENV["WEBSITE_URL"]
+    && $_ENV["TESTING_ENABLED"] == "true"
+    && in_array( $_SERVER["HTTP_HOST"], [$_ENV["WEBSITE_URL_TESTING"], "apache"])
+) {
+    $_ENV["ENVIRONMENT"] = 'testing';
+    $_ENV["MYSQL_DATABASE"] = $_ENV["MYSQL_DATABASE_TESTING"];
+    $_ENV["MYSQL_USER"] = $_ENV["MYSQL_USER_TESTING"];
+    $_ENV["MYSQL_PASSWORD"] = $_ENV["MYSQL_PASSWORD_TESTING"];
+}
+
+
+include "router.php";
 
 $container->executeMethod($router->process() ?? 'App\Controller\ErrorPageController::index');
 

@@ -5,6 +5,10 @@ RUN apk update; \
 
 RUN apk add bash nano git curl php-cli php-mbstring php-mysqli
 
+RUN apk add --no-cache zip libzip-dev
+#RUN docker-php-ext-configure zip --with-libzip
+RUN docker-php-ext-install zip
+
 RUN docker-php-ext-install mysqli pdo_mysql
 
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php

@@ -1,0 +1,57 @@
+version: "3.2"
+services:
+#----------------------------------------------------
+#----- PHP ------------------------------------------
+#----------------------------------------------------
+  php:
+    build: './docker/php/'
+    restart: always
+    depends_on:
+      - mysql
+      - firefox
+      - selenium-hub
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./:/var/www/html/
+    working_dir: /var/www/html/
+#----------------------------------------------------
+#----- APACHE ---------------------------------------
+#----------------------------------------------------
+  apache:
+    build: './docker/apache-with-ssl/'
+    restart: always
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html/
+#----------------------------------------------------
+#----- MYSQL ----------------------------------------
+#----------------------------------------------------
+  mysql:
+    image: 'mysql:8'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+     - .env
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - ./docker/mysql/:/var/lib/mysql/
+#----------------------------------------------------
+#----- NETWORKS -------------------------------------
+#----------------------------------------------------
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

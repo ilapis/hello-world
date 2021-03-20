@@ -39,7 +39,7 @@ class HttpRouter implements HttpRouterInterface {
 
             $is_authorized = in_array(Authorization::getAccess(), $route['access']) || in_array(ACCESS::PUBLIC, $route['access']) ;
             $has_role = in_array(Authorization::getRole(), $route['roles']) || in_array(ROLES::ANONYMOUS, $route['roles']);
-            $found_route = ($route['url'] == '/' . $this->request->getParameter('url'));
+            $found_route = ($route['url'] == $this->request->getParameter('url'));
 
             if ( ( sizeof($route['methods']) === 0
                 || in_array($_SERVER['REQUEST_METHOD'], $route['methods']) )

@@ -1,0 +1,143 @@
+version: "3.2"
+services:
+#----------------------------------------------------
+#----- PHP ------------------------------------------
+#----------------------------------------------------
+  php:
+    build: './docker/php/'
+    restart: always
+    depends_on:
+      - mysql
+      - firefox
+      - selenium-hub
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - ./:/var/www/html/
+    working_dir: /var/www/html/
+#----------------------------------------------------
+#----- APACHE ---------------------------------------
+#----------------------------------------------------
+  apache:
+    build: './docker/apache-with-ssl/'
+    restart: always
+    env_file:
+     - .env
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html/
+#----------------------------------------------------
+#----- MYSQL ----------------------------------------
+#----------------------------------------------------
+  mysql:
+    image: 'mysql:8'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+     - .env
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/:/var/lib/mysql/
+    entrypoint:
+          sh -c "
+            echo 'CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE_TESTING};CREATE USER '\''${MYSQL_USER_TESTING}'\''@'\''%'\'' IDENTIFIED BY '\''${MYSQL_PASSWORD_TESTING}'\'';ALTER USER '\''${MYSQL_USER_TESTING}'\'' IDENTIFIED BY '\''${MYSQL_PASSWORD_TESTING}'\'';GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE_TESTING}.* TO '\''${MYSQL_USER_TESTING}'\''@'\''%'\'';FLUSH PRIVILEGES;' > /docker-entrypoint-initdb.d/init.sql;
+            /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+          "
+#----------------------------------------------------
+#----- SELENIUM -------------------------------------
+#----------------------------------------------------
+  chrome:
+    image: selenium/node-chrome:4.0.0-beta-2-prerelease-20210310
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "6900:5900"
+
+  edge:
+    image: selenium/node-edge:4.0.0-beta-2-prerelease-20210310
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "6901:5900"
+
+  firefox:
+    image: selenium/node-firefox:4.0.0-beta-1-20210215
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "6902:5900"
+
+  opera:
+    image: selenium/node-opera:4.0.0-beta-2-prerelease-20210310
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "6903:5900"
+
+  selenium-hub:
+    image: selenium/hub:4.0.0-beta-1-20210215
+    container_name: selenium-hub
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+#----------------------------------------------------
+#----- NETWORKS -------------------------------------
+#----------------------------------------------------
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
