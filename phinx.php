@@ -4,12 +4,12 @@ include __DIR__ . "/vendor/autoload.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-/*
-$enviroments = [
-    'default_migration_table' => 'phinxlog',
-];
-*/
-$default_enviroment = $_ENV['ENVIRONMENT'];
+
+$enviroments = [];
+$enviroments['default_migration_table'] = 'phinxlog';
+$enviroments['default_environment'] = $_ENV['ENVIRONMENT'];
+
+//$default_enviroment = $_ENV['ENVIRONMENT'];
 
 $default_enviroment_settings = [
     'adapter' => 'mysql',
@@ -21,10 +21,12 @@ $default_enviroment_settings = [
     'charset' => $_ENV['MYSQL_CHARSET'],
 ];
 
+$enviroments[$_ENV['ENVIRONMENT']] = $default_enviroment_settings;
+
 //$enviroments['default_environment'] = $default_enviroment;
 //$enviroments[$default_enviroment] = $default_enviroment_settings;
 
-//if ( $_ENV['TESTING_ENABLED'] == true ) {
+if ( isset($_ENV['TESTING_ENABLED']) && $_ENV['TESTING_ENABLED'] == true ) {
 
     $testint_enviroment_settings = [
         'adapter' => 'mysql',
@@ -35,8 +37,8 @@ $default_enviroment_settings = [
         'port' => $_ENV['MYSQL_PORT'],
         'charset' => $_ENV['MYSQL_CHARSET'],
     ];
-    //$enviroments["testing"] = $testint_enviroment_settings;
-//}
+    $enviroments["testing"] = $testint_enviroment_settings;
+}
 
 return
 [
@@ -44,12 +46,13 @@ return
         'migrations' => '%%PHINX_CONFIG_DIR%%/db/migrations',
         'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds'
     ],
+    'environments' => $enviroments,/*
     'environments' => [
         'default_migration_table' => 'phinxlog',
         'default_environment' => $default_enviroment,
         //$default_enviroment => $default_enviroment_settings,
-        "development" => $default_enviroment_settings,
+        $default_enviroment => $default_enviroment_settings,
         "testing" => $testint_enviroment_settings,
-    ],
+    ],*/
     'version_order' => 'creation'
 ];

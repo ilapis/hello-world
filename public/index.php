@@ -24,7 +24,6 @@ if ( $_SERVER["HTTP_HOST"] != $_ENV["WEBSITE_URL"]
     $_ENV["MYSQL_PASSWORD"] = $_ENV["MYSQL_PASSWORD_TESTING"];
 }
 
-
 include "router.php";
 
 $container->executeMethod($router->process() ?? 'App\Controller\ErrorPageController::index');
