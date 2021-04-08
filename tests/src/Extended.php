@@ -20,8 +20,7 @@ Trait Extended {
 
         if ( $_ENV['BROWSER'] === 'chrome' ) {
             $chromeOptions = new ChromeOptions();
-            $chromeOptions->addArguments(['--headless']);
-            //$chromeOptions->addArguments(['--headless', '--no-sandbox', '--disable-gpu']);
+            $chromeOptions->addArguments(['--headless', '--no-sandbox', '--disable-gpu']);
 
             $capabilities = DesiredCapabilities::chrome();
             $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);

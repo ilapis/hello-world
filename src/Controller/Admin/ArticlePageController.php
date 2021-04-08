@@ -22,4 +22,14 @@ class ArticlePageController extends AdminController {
             ->output()
         ;
     }
+
+    public function create(): void
+    {
+        $this
+            ->addView(
+            "admin/article/create.tpl",
+        )
+            ->output()
+        ;
+    }
 }

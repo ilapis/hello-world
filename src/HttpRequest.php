@@ -24,31 +24,45 @@ class HttpRequest {
         return $this->_parameters[$key] ?? '';
     }
 
+    public function setParameter(string $key, string $value): HttpRequest {
+
+        $this->_parameters[$key] == $value;
+
+        return $this;
+    }
+
     public function getMethod(): string {
+
         return $this->_method;
     }
 
     public function getPost(): array {
+
         return $this->_post;
     }
 
     public function getParameters(): array {
+
         return $this->_parameters;
     }
 
     public function getHeaders(): array {
+
         return $this->_headers;
     }
 
     public function getBody(): string {
+
         return $this->_body;
     }
 
     public function getJson(): array {
+
         return json_decode($this->_body, true);
     }
 
     public function getFiles(): array {
+
         return $this->_files;
     }
 }

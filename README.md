@@ -23,7 +23,7 @@ vendor/bin/phinx seed:run -e development
 
 ####To analyze PHP Code
 
-./vendor/bin/psalm
+php ./vendor/bin/psalm
 
 ####To execute PHP Unit tests:
 

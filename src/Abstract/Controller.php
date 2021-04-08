@@ -46,4 +46,10 @@ abstract class Controller implements ControllerInterface {
         echo json_encode($array);
         exit(0);
     }
+
+    public function redirect(string $link): void
+    {
+        header('location: ' . $link);
+        exit(0);
+    }
 }

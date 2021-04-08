@@ -21,6 +21,7 @@ class HttpRouter implements HttpRouterInterface {
         array $methods = [],
         array $access = [Access::PUBLIC],
         array $roles = [Roles::ANONYMOUS],
+        string $redirect = null,
     ): HttpRouter {
         $this->_routes[] = [
             "url" => $url,
@@ -28,6 +29,7 @@ class HttpRouter implements HttpRouterInterface {
             "methods" => $methods,
             "access" => $access,
             "roles" => $roles,
+            "redirect" => $redirect,
         ];
 
         return $this;
@@ -37,22 +39,89 @@ class HttpRouter implements HttpRouterInterface {
 
         foreach($this->_routes as $route) {
 
-            $is_authorized = in_array(Authorization::getAccess(), $route['access']) || in_array(ACCESS::PUBLIC, $route['access']) ;
-            $has_role = in_array(Authorization::getRole(), $route['roles']) || in_array(ROLES::ANONYMOUS, $route['roles']);
-            $found_route = ($route['url'] == $this->request->getParameter('url'));
+            if ( sizeof($route['methods']) === 0 || in_array($this->request->getMethod(), $route['methods']) ) {
 
-            if ( ( sizeof($route['methods']) === 0
-                || in_array($_SERVER['REQUEST_METHOD'], $route['methods']) )
-                && $found_route
-            ) {
-                if ( !$is_authorized ) { return "NOT AUTHORIZED"; }
-                if ( !$has_role ) { return "WRONG ROLE"; }
+                $is_authorized = in_array(Authorization::getAccess(), $route['access']) || in_array(ACCESS::PUBLIC, $route['access']);
+                $has_role = in_array(Authorization::getRole(), $route['roles']) || in_array(ROLES::ANONYMOUS, $route['roles']);
 
-                return $route['namespace'];
+                if (!str_contains($route['url'], "{")) {
+
+                    $found_route = ($route['url'] == $this->request->getParameter('url'));
+
+                    if ($found_route) {
+                        if (!$is_authorized) {
+                            return "NOT AUTHORIZED";
+                        }
+                        if (!$has_role) {
+                            return "WRONG ROLE";
+                        }
+                        $this->redirect($route["redirect"]);
+
+                        return $route['namespace'];
+                    }
+
+                } else {
+
+                    $routerUrl = explode("/", $route['url']);
+                    $currentUrl = explode("/", $this->request->getParameter('url'));
+
+                    if ( $this->patternMatches($routerUrl, $currentUrl) ) {
+
+                        $replace = [];
+
+                        foreach ( $routerUrl as $index => $routerUrlElement ) {
+                            if ( str_contains($routerUrlElement, "{") ) {
+                                $replace[$routerUrlElement] = ucfirst($currentUrl[$index]);
+                                if ( str_starts_with($routerUrlElement, ":") ) {
+                                    $this->request->setParameter( strtr($routerUrlElement, [":" => ""]), $currentUrl[$index],);
+                                }
+                            }
+                        }
+
+                        if (!$is_authorized) {
+                            return "NOT AUTHORIZED";
+                        }
+                        if (!$has_role) {
+                            return "WRONG ROLE";
+                        }
+                        $this->redirect($route["redirect"]);
+                        //print_r([ $route['namespace'], $route['url'], $replace ]);
+
+                        return strtr( $route['namespace'], $replace);
+
+                    }
+
+                }
             }
         }
 
         return "NOT FOUND";
     }
 
+    public function redirect(?string $redirect) {
+
+        if ( $redirect!= null ) {
+            header('location: ' . $redirect );
+        }
+    }
+
+    public function patternMatches($routerUrl, $currentUrl) {
+
+        if ( sizeof($routerUrl) == sizeof($currentUrl) ) {
+
+                for ( $i = 0; $i < sizeof($routerUrl); $i++ ) {
+                    if ( $routerUrl[$i] == $currentUrl[$i] || str_contains($routerUrl[$i], "{") ) {
+
+                        continue;
+                    } else {
+
+                        return false;
+                    }
+                }
+
+                return true;
+        }
+
+        return false;
+    }
 }

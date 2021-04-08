@@ -21,12 +21,20 @@ abstract class AdminController extends Controller {
                 template: "partials/admin/sidebar.tpl",
                 model: ["links" => [
                         [
-                        "text" => "Article",
-                        "href" => "/admin/article",
+                            "text" => "Dashboard",
+                            "href" => "/admin/dashboard",
                         ],
                         [
-                        "text" => "Category",
-                        "href" => "/admin/category",
+                            "text" => "Article",
+                            "href" => "/admin/article",
+                        ],
+                        [
+                            "text" => "Category",
+                            "href" => "/admin/category",
+                        ],
+                        [
+                            "text" => "Administrators",
+                            "href" => "/admin/settings/administrators",
                         ]
                 ]],
                 position:  "sidebar",

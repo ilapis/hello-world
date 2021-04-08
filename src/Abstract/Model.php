@@ -21,6 +21,9 @@ abstract class Model implements \App\Interfaces\ModelInterface {
 
         if ( $this->db ) {
             $stmt = $this->db->query($query);
+            if( $stmt === false ){
+                throw new \Exception(\mysqli_error($this->db));
+            }
         }
 
         $result = [];

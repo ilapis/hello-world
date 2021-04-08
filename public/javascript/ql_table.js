@@ -20,34 +20,69 @@
             });
 
            $(data).find(".wrapper-sticky").each( function() {
-               $(this).height( options.height - 2 - 3 * 16 - 6 * 16 - 8 );
+
+               let dataHeight = 0;
+               let bodyHeight = options.height - 2 - 3 * 16 - 6 * 16 - 8;
+
+               if ( undefined !== options.data ) {
+                   dataHeight = ( options.data.length  + 1 ) * 48;
+               } else {
+                   height = bodyHeight;
+               }
+
+               let height = dataHeight;
+
+               if ( bodyHeight < dataHeight ) {
+                   height = bodyHeight;
+               }
+
+               $(this).height( bodyHeight );
+               $(this).find("table").height( height );
+
            });
 
         } );
 
         function _get_buttons() {
 
+            if ( options.addButtonLink !== undefined ) {
+
+                return `
+                <div style="height:calc(6rem - 1px);width:100%;">
+                    <a href="${options.addButtonLink}" class="btn btn-primary" style="
+                        margin: 2.5rem 1.25rem 0 0.5rem;
+                        height: 3.5rem;
+                        width: 3.5rem;
+                        border-radius: 3rem;
+                        margin-top: -1.75rem;
+                        position: absolute;
+                        right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2.5rem;display: block;right: 1px;position: relative;"></i>
+                    </a>
+                    <button class="btn btn-default" style="border: 1px solid #CCCCCC;
+                        float: left;
+                        margin: 2.5rem 0rem 1rem 1rem;">Export
+                    </button>
+                </div>
+                `;
+            }
+
             return `
-                <div style="height:6rem;width:100%;">
-                                        <button class="btn btn-primary" style="    margin: 2.5rem 1.25rem 0 0.5rem;
-                    height: 3.5rem;
-                    width: 3.5rem;
-                    border-radius: 3rem;
-                    margin-top: -1.75rem;
-                    position: absolute;
-                    right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2rem;display: block;"></i></button>
-                                        <button class="btn btn-default" style="border: 1px solid #CCCCCC;
-                    float: left;
-                    margin: 2.5rem 0rem 1rem 1rem;">Export</button>
+                <div style="height:calc(6rem - 1px);width:100%;">
+                    <button class="btn btn-default" style="border: 1px solid #CCCCCC;
+                        float: left;
+                        margin: 2.5rem 0rem 1rem 1rem;">Export
+                    </button>
                 </div>
             `;
         }
 
         function _get_table( options ) {
 
+            let data = options.data;
+
             return `
             <table id="${options.id}">
-                ${_get_body_rows()}
+                ${_get_body_rows(data)}
             </table>
             `;
         }
@@ -75,29 +110,64 @@
             `;
         }
 
-        function _get_body_rows() {
+        function _get_body_rows(data) {
 
             let template = "";
 
-            for (let i = 0; i < 100; i++ ) {
-                if( i === 0) {
-                    template = template + `
-                <tr class="c_${i}" style="line-height:1.5rem;">
-                    <td>sd <i class="bi bi-sort-down" style="float:right;font-size: 1.5rem;"></i> </td>
-                    <td>sd <i class="bi bi-sort-up-alt" style="float:right;font-size: 1.5rem;"></i> </td>
-                    <td>hj</td>
-                </tr>`
-                    ;
-                } else {
-                    template = template + `
-                <tr class="c_${i}">
-                    <td>sd</td>
-                    <td>fg</td>
-                    <td>hj</td>
-                </tr>`
-                    ;
+            if ( options.collumns !== undefined ) {
+
+                for (let i = 0; i < 1; i++ ) {
+                    let cell = "";
+
+                    Object.keys(options.collumns).forEach( colrow => {
+                        if ( data[i][options.collumns[colrow].key] !== undefined ) {
+                            cell = cell + `<td style="height:3rem;">` + options.collumns[colrow].key + `</td>`;
+                        }
+                    });
+
+                    template = template + `<tr class="c_${i}"  style="line-height:1.5rem;height:3rem;"> ` + cell + `</tr>` ;
                 }
+
+                for (let i = 0; i < data.length; i++ ) {
+                    let cell = "";
+
+                    Object.keys(options.collumns).forEach( colrow => {
+                        if ( data[i][options.collumns[colrow].key] !== undefined ) {
+                            if ( options.collumns[colrow].render !== undefined ) {
+                                cell = cell + `<td style="height:3rem;">` + options.collumns[colrow].render( data[i][options.collumns[colrow].key] )+ `</td>`;
+                            } else {
+                                cell = cell + `<td style="height:3rem;">` + data[i][options.collumns[colrow].key] + `</td>`;
+                            }
+                        }
+                    });
+
+                    template = template + `<tr class="c_${i}"> ` + cell + `</tr>` ;
+                }
+
+            } else {
+
+                for (let i = 0; i < 1; i++ ) {
+                    let cell = "";
+
+                    Object.keys(data[i]).forEach( row => {
+                        cell = cell + `<td style="height:3rem;">` + row + `</td>`;
+                    });
+
+                    template = template + `<tr class="c_${i}"  style="line-height:1.5rem;height:3rem;"> ` + cell + `</tr>` ;
+                }
+
+                for (let i = 0; i < data.length; i++ ) {
+                    let cell = "";
+
+                    Object.keys(data[i]).forEach( row => {
+                        cell = cell + `<td style="height:3rem;">` + data[i][row] + `</td>`
+                    }) ;
+
+                    template = template + `<tr class="c_${i}"> ` + cell + `</tr>` ;
+                }
+
             }
+
             return template;
         }
     };

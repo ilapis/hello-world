@@ -19,13 +19,16 @@ class LoginPageController extends AdminController {
 
     public function index(): void
     {
-
-        $this
-            ->addView(
-                template: "admin/login.tpl"
-            )
-            ->output()
-        ;
+        if ( Access::ADMIN !== Authorization::getAccess() ) {
+            $this
+                ->addView(
+                    template: "admin/login.tpl"
+                )
+                ->output()
+            ;
+        } else {
+            $this->redirect("/admin/dashboard");
+        }
     }
 
     public function logout(): void
