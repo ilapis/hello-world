@@ -42,6 +42,13 @@ $router
         access: [ACCESS::ADMIN],
         roles: [ROLES::ADMINISTRATOR],
     )
+    /* Default controller get index */
+    ->add(
+        url: '/admin/{CONTROLLER}/list',
+        namespace: 'App\Controller\Admin\{CONTROLLER}PageController::list',
+        access: [ACCESS::ADMIN],
+        roles: [ROLES::ADMINISTRATOR],
+    )
     /* Default controller get create */
     ->add(
         url: '/admin/{CONTROLLER}/create',
@@ -68,7 +75,7 @@ $router
     ->add(
         url: '/admin/{CONTROLLER}/update/:id',
         namespace: 'App\Controller\Admin\{CONTROLLER}PageController::update',
-        methods: ["PATCH"],
+        methods: ["POST"],
         access: [ACCESS::ADMIN],
         roles: [ROLES::ADMINISTRATOR],
     )
@@ -76,6 +83,7 @@ $router
     ->add(
         url: '/admin/{CONTROLLER}/delete/:id',
         namespace: 'App\Controller\Admin\{CONTROLLER}PageController::deleteConfirmation',
+        methods: ["GET"],
         access: [ACCESS::ADMIN],
         roles: [ROLES::ADMINISTRATOR],
     )
@@ -96,6 +104,12 @@ $router
     )
     ->add(
         url: '/admin/{FOLDER}/{CONTROLLER}/{ACTION}',
+        namespace: 'App\Controller\Admin\{FOLDER}\{CONTROLLER}PageController::{ACTION}',
+        access: [ACCESS::ADMIN],
+        roles: [ROLES::ADMINISTRATOR],
+    )
+    ->add(
+        url: '/admin/{FOLDER}/{CONTROLLER}/{ACTION}/:id',
         namespace: 'App\Controller\Admin\{FOLDER}\{CONTROLLER}PageController::{ACTION}',
         access: [ACCESS::ADMIN],
         roles: [ROLES::ADMINISTRATOR],

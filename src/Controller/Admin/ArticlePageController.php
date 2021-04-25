@@ -13,23 +13,4 @@ class ArticlePageController extends AdminController {
         parent::__construct();
     }
 */
-    public function index(): void
-    {
-        $this
-            ->addView(
-            "admin/article/index.tpl",
-        )
-            ->output()
-        ;
-    }
-
-    public function create(): void
-    {
-        $this
-            ->addView(
-            "admin/article/create.tpl",
-        )
-            ->output()
-        ;
-    }
 }

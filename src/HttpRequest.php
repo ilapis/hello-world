@@ -5,6 +5,7 @@ namespace App;
 class HttpRequest {
 
     private string $_method;
+    private string $_url;
     private array $_post;
     private array $_parameters;
     private array $_headers;
@@ -13,6 +14,7 @@ class HttpRequest {
 
     public function __construct () {
         $this->_method = $_SERVER['REQUEST_METHOD'];
+        $this->_url = $_SERVER['REQUEST_METHOD'];
         $this->_post = $_POST;
         $this->_parameters = $_GET;
         $this->_headers = getallheaders();
@@ -27,6 +29,25 @@ class HttpRequest {
     public function setParameter(string $key, string $value): HttpRequest {
 
         $this->_parameters[$key] == $value;
+
+        return $this;
+    }
+
+    public function setRouterParameter(string $key, string $value): HttpRequest {
+
+        $_SESSION["ROUTER_PARAMETERS"][$this->_url][$key] = $value;
+
+        return $this;
+    }
+
+    public function getRouterParameter(string $key): ?string {
+
+        return $_SESSION["ROUTER_PARAMETERS"][$this->_url][$key] ?? null;
+    }
+
+    public function clearRouterParameter(): HttpRequest {
+
+        unset($_SESSION["ROUTER_PARAMETERS"][$this->_url]);
 
         return $this;
     }

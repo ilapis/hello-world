@@ -2,7 +2,26 @@
 
 session_start();
 
+$xdebug_coverage = false;
+
+include __DIR__ . "/../bootstrap.php";
 include __DIR__ . "/../vendor/autoload.php";
+
+use SebastianBergmann\CodeCoverage\Filter;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlReport;
+
+if ( $xdebug_coverage ) {
+    $filter = new Filter;
+    $filter->includeDirectory(__DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR);
+    $coverage = new CodeCoverage(
+        (new Selector)->forLineCoverage($filter),
+        $filter
+    );
+    //$coverage->start('Default coverage');
+    $coverage->start($_GET['url']);
+}
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -28,3 +47,7 @@ include "router.php";
 
 $container->executeMethod($router->process() ?? 'App\Controller\ErrorPageController::index');
 
+if ( $xdebug_coverage ) {
+    $coverage->stop();
+    (new HtmlReport)->process($coverage, '/var/www/html/reports/xdebug_coverage_report');
+}

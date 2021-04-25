@@ -9,11 +9,11 @@
 </span>
 
 <div class="col-md-6">
-    <form id="inputs" class="row g-3 needs-validation" novalidate action="/api/administrator" data-method="post"></form>
+    <form id="inputs" class="row g-3 needs-validation" novalidate action="/api/administrator" data-method="patch"></form>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        $("#inputs").ql_form(<?=json_encode(App\Form\Admin\Settings\AdministratorsPageForm::get());?>);
+        $("#inputs").ql_form(<?=json_encode(App\Form\Admin\Settings\AdministratorsPageForm::get($model));?>);
     }, false);
 </script>

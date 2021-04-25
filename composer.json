@@ -9,7 +9,8 @@
         "vlucas/phpdotenv": "^5.3",
         "fzaninotto/faker": "^1.5",
         "chrome-php/chrome": "^0.9.0",
-        "php-webdriver/webdriver": "^1.10"
+        "php-webdriver/webdriver": "^1.10",
+        "phpunit/php-code-coverage": "^9.2"
     },
     "require-dev": {
         "vimeo/psalm": "^4.6",

@@ -1,6 +1,5 @@
 <?php
 
-
 if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) {
 
     $this->view("partial/admin/header");
@@ -9,6 +8,7 @@ if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) {
         <?php $this->view("sidebar"); ?>
     </div>
     <div class="col-sm-10">
+        <?php $this->view("partial/admin/menu_top"); ?>
         <?php $this->view("center"); ?>
     </div>
 <?php

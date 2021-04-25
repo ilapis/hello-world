@@ -1,5 +1,6 @@
+<!--
 <div id="menu_top" style="height:3rem;width:100%;border-bottom: 1px solid #CCCCCC;"></div>
-
+-->
 <ul id="tabs" class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="#nav-home">Active</a>

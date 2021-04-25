@@ -4,7 +4,23 @@ RUN apk update; \
     apk upgrade;
 
 RUN apk add bash nano git curl php-cli php-mbstring php-mysqli
+RUN apk add openssh
 
+RUN apk --no-cache add --virtual .build-deps $PHPIZE_DEPS \
+  && apk --no-cache add --virtual .ext-deps libmcrypt-dev freetype-dev \
+  libjpeg-turbo-dev libpng-dev libxml2-dev msmtp \
+  && docker-php-source extract \
+  && pecl install xdebug \
+  && docker-php-ext-enable xdebug \
+  && docker-php-source delete \
+  && apk del .build-deps
+
+RUN echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.log=/var/www/html/xdebug/xdebug.log" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_port=9000" >> /usr/local/etc/php/conf.d/xdebug.ini
+	
 RUN apk add --no-cache zip libzip-dev
 #RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-install zip

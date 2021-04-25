@@ -10,7 +10,6 @@ class ErrorPageController extends DefaultController {
     {
         $this
             ->addView("error.tpl")
-            ->output()
         ;
     }
 
@@ -18,7 +17,6 @@ class ErrorPageController extends DefaultController {
     {
         $this
             ->addView("error.tpl")
-            ->output()
         ;
     }
 

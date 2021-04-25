@@ -8,29 +8,8 @@ use App\Model\Admin\Settings\AdministratorsModel;
 class AdministratorsPageController extends AdminController {
 
     public function __construct (
-        private AdministratorsModel $model
+        protected AdministratorsModel $model
     ) {
         parent::__construct();
-    }
-
-    public function index(): void
-    {
-        $this
-            ->addView(
-                template: "admin/settings/administrators/index.tpl",
-                model: $this->model->geAdministratorsDataForIndex(),
-            )
-            ->output()
-        ;
-    }
-
-    public function create(): void
-    {
-        $this
-            ->addView(
-                template: "admin/settings/administrators/create.tpl",
-            )
-            ->output()
-        ;
     }
 }

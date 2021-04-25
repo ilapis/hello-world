@@ -2,6 +2,8 @@
 
 namespace App\Abstract;
 
+use App\HttpRequest;
+
 abstract class AdminController extends Controller {
 
     public string $layout = "admin";
@@ -16,6 +18,10 @@ abstract class AdminController extends Controller {
                 "title" => "Administrator",
                 ],
                 position: "partial/admin/header"
+            )
+            ->addView(
+                template: "partials/admin/menu_top.tpl",
+                position:  "partial/admin/menu_top",
             )
             ->addView(
                 template: "partials/admin/sidebar.tpl",
@@ -45,5 +51,4 @@ abstract class AdminController extends Controller {
             )
         ;
     }
-
 }

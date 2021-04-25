@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row justify-content-md-center" style="top: calc(25%);position: relative;">
         <div class="col-md-6">
-            <form id="inputs" class="row g-3 needs-validation" novalidate action="/admin/login" method="post"></form>
+            <form id="inputs" class="row g-3 needs-validation" novalidate action="/admin/login" data-method="post"></form>
         </div>
     </div>
 </div>

@@ -7,6 +7,7 @@
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
             form.addEventListener('submit', function (event) {
+
                 if ( !form.checkValidity() ) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -17,7 +18,7 @@
                         data[$(this).attr('name')] = $(this).val();
                     } );
 
-                    postData( form.action, data ).then(response => {
+                    postData( form.action, form.getAttribute("data-method"), data ).then(response => {
                         if ( response.action == "redirect" ) {
                             window.location.replace(response.redirect);
                         }
@@ -44,13 +45,16 @@
                 if ( data2.script  === 'ql_button' ) {
                     $(`#index_${index2}`).ql_button(data2);
                 }
+                if ( data2.script  === 'ql_checkbox' ) {
+                    $(`#index_${index2}`).ql_checkbox(data2);
+                }
             });
         });
     };
 
-    async function postData(url = '', data = {}) {
+    async function postData(url = '', method = 'POST', data = {}) {
         const response = await fetch(url, {
-            method: 'POST',
+            method: method,
             mode: 'cors',
             cache: 'no-cache',
             credentials: 'same-origin',

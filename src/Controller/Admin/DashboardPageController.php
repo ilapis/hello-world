@@ -14,13 +14,4 @@ class DashboardPageController extends AdminController {
         parent::__construct();
     }
 */
-    public function index(): void
-    {
-
-        $this->addView(
-            "admin/dashboard.tpl",
-        );
-
-        $this->output();
-    }
 }

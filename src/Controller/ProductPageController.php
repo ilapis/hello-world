@@ -21,7 +21,7 @@ class ProductPageController extends DefaultController {
                 template: "product.tpl",
                 model: $this->model->getProductData(),
             )
-            ->output();
+        ;
     }
 
 }

@@ -68,13 +68,15 @@ class HttpRouter implements HttpRouterInterface {
                     if ( $this->patternMatches($routerUrl, $currentUrl) ) {
 
                         $replace = [];
+                        $this->request->clearRouterParameter($currentUrl);
 
                         foreach ( $routerUrl as $index => $routerUrlElement ) {
                             if ( str_contains($routerUrlElement, "{") ) {
                                 $replace[$routerUrlElement] = ucfirst($currentUrl[$index]);
-                                if ( str_starts_with($routerUrlElement, ":") ) {
-                                    $this->request->setParameter( strtr($routerUrlElement, [":" => ""]), $currentUrl[$index],);
-                                }
+                            }
+
+                            if ( str_starts_with($routerUrlElement, ":") ) {
+                                $this->request->setRouterParameter( strtr($routerUrlElement, [":" => ""]), $currentUrl[$index],);
                             }
                         }
 
@@ -85,10 +87,8 @@ class HttpRouter implements HttpRouterInterface {
                             return "WRONG ROLE";
                         }
                         $this->redirect($route["redirect"]);
-                        //print_r([ $route['namespace'], $route['url'], $replace ]);
 
                         return strtr( $route['namespace'], $replace);
-
                     }
 
                 }
@@ -110,7 +110,7 @@ class HttpRouter implements HttpRouterInterface {
         if ( sizeof($routerUrl) == sizeof($currentUrl) ) {
 
                 for ( $i = 0; $i < sizeof($routerUrl); $i++ ) {
-                    if ( $routerUrl[$i] == $currentUrl[$i] || str_contains($routerUrl[$i], "{") ) {
+                    if ( $routerUrl[$i] == $currentUrl[$i] || str_contains($routerUrl[$i], "{") || str_contains($routerUrl[$i], ":") ) {
 
                         continue;
                     } else {

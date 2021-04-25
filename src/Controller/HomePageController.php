@@ -8,15 +8,16 @@ class HomePageController extends DefaultController {
 
     public function index(): void
     {
-
-        $this/*
+/*
+        $this
             ->addView(
             "message.tpl",
                 [
                     "text" => "Hello world",
                 ],
-            )*/
-            ->output();
+            )
+            //->output();
+*/
     }
 
 }

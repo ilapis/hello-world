@@ -1,4 +1,3 @@
-<div id="menu_top" style="height:3rem;width:100%;border-bottom: 1px solid #CCCCCC;"></div>
 <div id="table" style="overflow:auto;"></div>
 
 <script>
@@ -11,15 +10,32 @@
             data: <?=json_encode($model)?>,
             collumns: [
                 {
+                    head: {
+                        cssStyle: "width: 60px;"
+                    },
                     key: "id"
+                },
+                {
+                    head: {
+                        cssStyle: "width: 60px;"
+                    },
+                    cssStyle: "text-align: center;",
+                    key: "enabled",
+                    render: function (value) {
+                        return "<input type='checkbox' />";
+                    }
                 },
                 {
                     key: "username"
                 },
                 {
-                    key: "enabled",
+                    head: {
+                        cssStyle: "width: 120px;"
+                    },
+                    key: "id",
+                    title: "",
                     render: function (value) {
-                        return "<input type='checkbox' />";
+                        return `<a class="btn btn-primary" href="/admin/settings/administrators/edit/${value}" >Edit</a>`;
                     }
                 }
             ]

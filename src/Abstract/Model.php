@@ -17,12 +17,14 @@ abstract class Model implements \App\Interfaces\ModelInterface {
 
     protected function query(string $query): array
     {
+        global $g_error_code;
+
         $stmt = false;
 
         if ( $this->db ) {
             $stmt = $this->db->query($query);
             if( $stmt === false ){
-                throw new \Exception(\mysqli_error($this->db));
+                file_put_contents("/var/www/html/logs/php.log", getErrorCode() . PHP_EOL . $this->db->error . PHP_EOL . $query . PHP_EOL, FILE_APPEND);;
             }
         }
 
