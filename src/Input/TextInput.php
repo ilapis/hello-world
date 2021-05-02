@@ -100,4 +100,28 @@ class TextInput {
             ]
         ];
     }
+
+    public static function name(string $value = ""): array
+    {
+        return [
+            "script" => "ql_input",
+            "inline" =>true,
+            "label" => [
+                "text" => "* Name",
+            ],
+            "input" =>  [
+                "id" => "name",
+                "name" => "name",
+                "type" => "text",
+                "value" => $value,
+            ],
+            "validator" => [
+                "required" => true,
+            ],
+            "messages" => [
+                "valid_feedback" => "",
+                "invalid_feedback" => "Required",
+            ]
+        ];
+    }
 }
