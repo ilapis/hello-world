@@ -17,6 +17,24 @@ services:
       - ./:/var/www/html/
     working_dir: /var/www/html/
 #----------------------------------------------------
+#----- NODEJS ---------------------------------------
+#----------------------------------------------------
+  nodejs:
+    build: './docker/nodejs/'
+#    restart: always
+#    depends_on:
+#      - mysql
+#      - firefox
+#      - selenium-hub
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/var/www/html/
+    working_dir: /var/www/html/
+#----------------------------------------------------
 #----- APACHE ---------------------------------------
 #----------------------------------------------------
   apache:

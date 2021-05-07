@@ -1,6 +1,7 @@
 .idea/
 logs/*
 .env
+/node_modules
 /docker/mysql/*
 /docker/mysql-test/*
 /vendor
