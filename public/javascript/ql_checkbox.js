@@ -33,7 +33,7 @@
                 <div class="col-sm-4 form-label">&nbsp;</div>
                 <div class="col-sm-8">
                   <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="${options.input.name}"  name="${options.input.name}" ${required} ${checked} data-value style="margin-top: 0.75rem;" >
+                      <input class="form-check-input" type="checkbox" id="${options.input.name}"  name="${options.input.name}" ${required} ${checked} data-value style="margin-top: 0.75rem;" >
                       <label class="form-check-label" for="${options.input.name}">${label}</label>
                       ${feedback}
                   </div>

@@ -8,20 +8,35 @@ class CategoryModel extends DefaultModel {
 
     public function list(): array
     {
-        return [
-            ["id" => 1, "title" => "test"],
-            ["id" => 2, "title" => "test2"]
-        ];
+        return $this->get("category", ["id", "title", "enabled"]);;
     }
 
     public function save(array $data): array
     {
-        return $data;
+        $data["translation_key"] = $data["translation_key"] ?? $data["title"];
+        $data["parent_id"] = $data["parent_id"] ?? 0;
+        $data["order"] = $data["order"] ?? 0;
+
+        return $this->saveRecord("category", $data);
+    }
+
+    public function edit(int $id): array
+    {
+
+        return $this->get(
+            table: "category",
+            collumns: ["id", "title", "enabled"],
+            where: ["id" => $id],
+        )[0];
     }
 
     public function update(array $data): array
     {
-        return $data;
+        $data["translation_key"] = $data["translation_key"] ?? $data["title"];
+        $data["parent_id"] = $data["parent_id"] ?? 0;
+        $data["order"] = $data["order"] ?? 0;
+
+        return $this->updateRecord("category", $data);
     }
 
     public function delete(array $data): array

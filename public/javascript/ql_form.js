@@ -15,7 +15,17 @@
                     event.preventDefault();
                     let data = {};
                     $(this).find('[data-value]').each( function () {
-                        data[$(this).attr('name')] = $(this).val();
+
+                        if ( $(this).is(':checkbox')) {
+                            if ( $(this).is(':checked')) {
+                                data[$(this).attr('name')] = "1";
+                            } else {
+                                data[$(this).attr('name')] = "0";
+                            }
+                        } else {
+                            data[$(this).attr('name')] = $(this).val();
+                        }
+
                     } );
 
                     postData( form.action, form.getAttribute("data-method"), data ).then(response => {

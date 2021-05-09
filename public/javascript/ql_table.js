@@ -154,7 +154,7 @@
                                 cssStyle = options.collumns[colrow].cssStyle;
                             }
                             if ( options.collumns[colrow].render !== undefined ) {
-                                cell = cell + `<td style="height:3rem;${cssStyle}">` + options.collumns[colrow].render( data[i][options.collumns[colrow].key] )+ `</td>`;
+                                cell = cell + `<td style="height:3rem;${cssStyle}">` + options.collumns[colrow].render( data[i], data[i][options.collumns[colrow].key] )+ `</td>`;
                             } else {
                                 cell = cell + `<td style="height:3rem;${cssStyle}">` + data[i][options.collumns[colrow].key] + `</td>`;
                             }

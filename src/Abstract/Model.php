@@ -42,6 +42,11 @@ abstract class Model implements \App\Interfaces\ModelInterface {
         return $result;
     }
 
+    public function getLastInsertedId() {
+
+        return $this->db->insert_id;
+    }
+
     public function __deconstruct()
     {
         if ( $this->db ) {

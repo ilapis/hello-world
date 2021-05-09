@@ -21,7 +21,7 @@
                     },
                     cssStyle: "text-align: center;",
                     key: "enabled",
-                    render: function (value) {
+                    render: function (row, value) {
                         return "<input type='checkbox' />";
                     }
                 },
@@ -34,7 +34,7 @@
                     },
                     key: "id",
                     title: "",
-                    render: function (value) {
+                    render: function (row, value) {
                         return `<a class="btn btn-primary" href="/admin/settings/administrators/edit/${value}" >Edit</a>`;
                     }
                 }
@@ -42,19 +42,3 @@
         });
     }, false);
 </script>
-
-<style>
-    table {
-        width: 100%;
-        height: 100%;
-        overflow:auto;
-        border-collapse: collapse;
-    }
-    table tr {
-        height: 3rem;
-        padding: 0 1rem;
-    }
-    table tr td {
-        padding: 0 1rem;
-    }
-</style>

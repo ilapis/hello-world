@@ -9,6 +9,8 @@ class AdminSeeder extends AbstractSeed
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../../");
         $dotenv->load();
 
+        echo $_ENV['WEB_ADMINISTRATOR_PASSWORD'];
+
         $this
             ->table('administrators')
             ->insert([

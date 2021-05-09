@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Abstract\DefaultController;
+use App\HttpRequest;
 
 class ErrorPageController extends DefaultController {
 
-    public function index(): void
+    public function index(HttpRequest $request): void
     {
         $this
             ->addView("error.tpl")
