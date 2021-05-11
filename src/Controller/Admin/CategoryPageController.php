@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Abstract\AdminController;
+use App\HttpRequest;
 use App\Model\Admin\CategoryModel;
 
 class CategoryPageController extends AdminController {
@@ -13,8 +14,18 @@ class CategoryPageController extends AdminController {
         parent::__construct();
     }
 
-    public function list() {
+    public function list(HttpRequest $request) {
 
-        return $this->response($this->model->list());
+        $filter = $request->getParameter("filter");
+
+        if ( $this->isJSON($filter) ) {
+            $filter = json_decode($filter, true);
+        } else {
+            $filter = [];
+        }
+
+        return $this->response(
+            $this->model->table($filter)
+        );
     }
 }

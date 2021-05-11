@@ -75,6 +75,9 @@
         table tr td {
             padding: 0 1rem;
         }
+        a {
+            text-indent: 0;
+        }
     </style>
 </head>
 <body>

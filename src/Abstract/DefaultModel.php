@@ -6,36 +6,22 @@ class DefaultModel extends Model {
 
     public function get(string $table, array $collumns = null, array $where = null): array
     {
-        $partial_where = "";
-        if ( $where !== null) {
-            foreach ( $where as $collumn => $value ) {
+        return $this->query(
+            "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where)
+        )[0];
+    }
 
-                if ( is_string($value) ) {
-                    $value = strtr($value, ["'" => "\'"]);
-                }
+    public function getList(string $table, array $collumns = null, array $where = null, array $filter = []): array
+    {
+        $filter = htmlspecialchars($filter["orderBy"] ?? "", ENT_HTML5);
 
-                if ( $partial_where == "" ) {
-                    $partial_where = "WHERE `" . strtr($collumn, ["`" => "\`"]) . "` = '" . $value . "'";
-                } else {
-                    $partial_where .= " AND `" . strtr($collumn, ["`" => "\`"]) . "` = '" . $value. "'";
-                }
-            }
-        }
-
-        $partial_collumns = "";
-        if ( $collumns !== null ) {
-            foreach ($collumns as $collumn) {
-                if ($partial_collumns == "") {
-                    $partial_collumns = "`" . strtr($collumn, ["`" => "\`"]) . "`";
-                } else {
-                    $partial_collumns .= ", `" . strtr($collumn, ["`" => "\`"]) . "`";
-                }
-            }
-        }
-
-        $query = "SELECT $partial_collumns FROM $table $partial_where ";
-
-        return $this->query($query);
+        return [
+            "data" => $this->query(
+                "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) . " " . $filter
+            ),
+            "metadata" => [],
+            "filter" => $filter,
+        ];
     }
 
     public function saveRecord(string $table, array $data): array
@@ -84,5 +70,44 @@ class DefaultModel extends Model {
         ];
 
         return $response;
+    }
+
+    private function where($where):string {
+
+        $partial_where = "";
+
+        if ( $where !== null && !empty($where) ) {
+            foreach ( $where as $collumn => $value ) {
+
+                if ( is_string($value) ) {
+                    $value = strtr($value, ["'" => "\'"]);
+                }
+
+                if ( $partial_where == "" ) {
+                    $partial_where = "WHERE `" . strtr($collumn, ["`" => "\`"]) . "` = '" . $value . "'";
+                } else {
+                    $partial_where .= " AND `" . strtr($collumn, ["`" => "\`"]) . "` = '" . $value. "'";
+                }
+            }
+        }
+
+        return $partial_where;
+    }
+
+    private function collumns($collumns): string {
+
+        $partial_collumns = "";
+
+        if ( $collumns !== null ) {
+            foreach ($collumns as $collumn) {
+                if ($partial_collumns == "") {
+                    $partial_collumns = "`" . strtr($collumn, ["`" => "\`"]) . "`";
+                } else {
+                    $partial_collumns .= ", `" . strtr($collumn, ["`" => "\`"]) . "`";
+                }
+            }
+        }
+
+        return $partial_collumns;
     }
 }

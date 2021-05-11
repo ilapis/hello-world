@@ -2,11 +2,13 @@
 
     $.fn.ql_table = function( options ) {
 
+        var  filter = {"orderBy": "", "search": "", "searchIn": []};
+
         return this.each( function (index, data)  {
 
             if ( options.dataUrl !== undefined ) {
-                getData(options.dataUrl).then(json => {
-                    options.data = json;
+                getData(options.dataUrl + "?filter=" + JSON.stringify(filter) ).then(json => {
+                    options.data = json.data;
                     _get(data, options);
                 });
             } else {
@@ -49,6 +51,24 @@
                 $(this).find("table").height(height);
 
             });
+
+            $(document).off("click", "[data-sort]");
+            $(document).on("click", "[data-sort]", function () {
+
+                if ($(this).hasClass("bi-sort-up")) {
+                    $(this).removeClass("bi-sort-up").addClass("bi-sort-down");
+                    filter.orderBy = "ORDER BY " + $(this).data("sort") + " DESC";
+                } else {
+                    $(this).removeClass("bi-sort-down").addClass("bi-sort-up");
+                    filter.orderBy = "ORDER BY " + $(this).data("sort") + " ASC";
+                }
+
+                getData(options.dataUrl + "?filter=" + JSON.stringify(filter) ).then(json => {
+                    options.data = json.data;
+                    _get(data, options);
+                });
+            })
+
         }
 
         function _get_buttons() {
@@ -64,12 +84,10 @@
                         border-radius: 3rem;
                         margin-top: -1.75rem;
                         position: absolute;
-                        right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2.5rem;display: block;right: 1px;position: relative;"></i>
-                    </a>
+                        right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2.5rem;display: block;right: 1px;position: relative;"></i></a>
                     <button class="btn btn-default" style="border: 1px solid #CCCCCC;
                         float: left;
-                        margin: 2.5rem 0rem 1rem 1rem;">Export
-                    </button>
+                        margin: 2.5rem 0rem 1rem 1rem;">Export</button>
                 </div>
                 `;
             }
@@ -78,8 +96,7 @@
                 <div style="height:calc(6rem - 1px);width:100%;">
                     <button class="btn btn-default" style="border: 1px solid #CCCCCC;
                         float: left;
-                        margin: 2.5rem 0rem 1rem 1rem;">Export
-                    </button>
+                        margin: 2.5rem 0rem 1rem 1rem;">Export</button>
                 </div>
             `;
         }
@@ -130,15 +147,41 @@
 
                 Object.keys(options.collumns).forEach( colrow => {
                     if ( data[0][options.collumns[colrow].key] !== undefined ) {
+
                         let title = options.collumns[colrow].key;
                         let cssStyle = "";
+
                         if ( options.collumns[colrow].title !== undefined ) {
                             title = options.collumns[colrow].title;
                         }
-                        if ( options.collumns[colrow].head !== undefined && options.collumns[colrow].head.cssStyle !== undefined ) {
-                            cssStyle = options.collumns[colrow].head.cssStyle;
+
+                        if ( options.collumns[colrow].cssStyle !== undefined && options.collumns[colrow].cssStyle.head !== undefined ) {
+                            cssStyle = options.collumns[colrow].cssStyle.head;
                         }
-                        cell = cell + `<td style="height:3rem;${cssStyle}">${title}</td>`;
+
+                        let sort_icon = "bi bi-sort-up";
+                        let sort_data = `data-sort="${title}"`;
+
+                        if ( filter.orderBy == `ORDER BY ${title} DESC` ) {
+                            sort_icon = "bi bi-sort-down";
+                            sort_data = `data-sort="${title}"`;
+                        }
+
+                        if ( filter.orderBy == `ORDER BY ${title} ASC` ) {
+                            sort_icon = "bi bi-sort-up";
+                            sort_data = `data-sort="${title}"`;
+                        }
+
+                        if ( title == "" ) {
+                            sort_icon = "";
+                            sort_data = "";
+                        }
+
+                        cell = cell + `
+                        <td style="height:3rem;${cssStyle}">
+                            <i class="${sort_icon}" ${sort_data}></i>
+                            <span>${title}</span>
+                        </td>`;
                     }
                 });
 
@@ -150,13 +193,13 @@
 
                     Object.keys(options.collumns).forEach( colrow => {
                         if ( data[i][options.collumns[colrow].key] !== undefined ) {
-                            if ( options.collumns[colrow].cssStyle !== undefined ) {
-                                cssStyle = options.collumns[colrow].cssStyle;
+                            if (  options.collumns[colrow].cssStyle !== undefined && options.collumns[colrow].cssStyle.collumn !== undefined ) {
+                                cssStyle = options.collumns[colrow].cssStyle.collumn ;
                             }
                             if ( options.collumns[colrow].render !== undefined ) {
-                                cell = cell + `<td style="height:3rem;${cssStyle}">` + options.collumns[colrow].render( data[i], data[i][options.collumns[colrow].key] )+ `</td>`;
+                                cell = cell + `<td style="height:3rem;text-indent: 1.25rem;${cssStyle}">` + options.collumns[colrow].render( data[i], data[i][options.collumns[colrow].key] )+ `</td>`;
                             } else {
-                                cell = cell + `<td style="height:3rem;${cssStyle}">` + data[i][options.collumns[colrow].key] + `</td>`;
+                                cell = cell + `<td style="height:3rem;text-indent: 1.25rem;${cssStyle}">` + data[i][options.collumns[colrow].key] + `</td>`;
                             }
                         }
                     });
@@ -204,7 +247,6 @@
 
             return response.json();
         }
-
     };
 
 }( jQuery ));

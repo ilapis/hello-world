@@ -6,9 +6,9 @@ use App\Abstract\DefaultModel;
 
 class CategoryModel extends DefaultModel {
 
-    public function list(): array
+    public function table(array $filter): array
     {
-        return $this->get("category", ["id", "title", "enabled"]);;
+        return $this->getList("category", ["id", "title", "enabled"], [], $filter);;
     }
 
     public function save(array $data): array
@@ -27,7 +27,7 @@ class CategoryModel extends DefaultModel {
             table: "category",
             collumns: ["id", "title", "enabled"],
             where: ["id" => $id],
-        )[0];
+        );
     }
 
     public function update(array $data): array

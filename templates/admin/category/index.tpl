@@ -10,48 +10,51 @@
             dataUrl: "/admin/category/list",
             collumns: [
                 {
-                    head: {
-                        cssStyle: "width: 60px;"
+                    cssStyle: {
+                        head: "width: 80px;",
                     },
                     key: "id"
                 },
                 {
-                    head: {
-                        cssStyle: "width: 60px;"
+                    cssStyle: {
+                        head: "width: 120px;",
+                        collumn: "text-align: center;"
                     },
-                    cssStyle: "text-align: center;",
                     key: "enabled",
                     render: function (row, value) {
 
-                        if ( value == "1") {
+                        let style = 'style="margin:auto;margin-top: 0.25rem;"';
+                        let checked = "";
 
-                            return `
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" checked="checked" style="margin:auto;margin-top: 0.25rem;">
-                            </div>`;
+                        if ( value == "1") {
+                            checked = `checked="checked"`;
                         }
 
                         return `
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" style="margin:auto;margin-top: 0.25rem;">
-                            </div>`;
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" ${checked}" ${style} >
+                        </div>
+                        `;
+
                     }
                 },
                 {
-                    cssStyle: "text-align: left;",
+                    cssStyle: {
+                        collumn: "text-align: left;"
+                    },
                     key: "title"
                 },
                 {
-                    head: {
-                        cssStyle: "width: 170px;"
+                    cssStyle: {
+                        head: "width: 224px;",
+                        collumn: "text-align: center;"
                     },
                     key: "id",
                     title: "",
-                    cssStyle: "text-align: center;",
                     render: function (row, value) {
                         return `
-                        <a class="btn btn-primary" href="/admin/category/edit/${value}" >Edit</a>
-                        <a class="btn btn-danger" href="/admin/category/delete/${value}" >Delete</a>
+                        <a class="btn btn-primary" href="/admin/category/edit/${value}" ><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a class="btn btn-danger" href="/admin/category/delete/${value}" ><i class="bi bi-trash"></i> Delete</a>
                         `;
                     }
                 }

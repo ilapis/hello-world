@@ -4,6 +4,7 @@ namespace App\Abstract;
 
 use App\HttpRequest;
 use App\Interfaces\ControllerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
 
 abstract class Controller implements ControllerInterface {
 
@@ -139,6 +140,10 @@ abstract class Controller implements ControllerInterface {
          * @psalm-suppress UnresolvableInclude
          */
         include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
+    }
+
+    protected function isJSON(string $string): bool {
+        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
     }
 
     public function __destruct() {
