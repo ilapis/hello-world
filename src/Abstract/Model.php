@@ -23,8 +23,16 @@ abstract class Model implements \App\Interfaces\ModelInterface {
 
         if ( $this->db ) {
             $stmt = $this->db->query($query);
-            if( $stmt === false ){
-                file_put_contents("/var/www/html/logs/php.log", getErrorCode() . PHP_EOL . $this->db->error . PHP_EOL . $query . PHP_EOL, FILE_APPEND);;
+            if ( $stmt === false ) {
+                file_put_contents("/var/www/html/logs/php.log", "MYSQL ERROR: " . getErrorCode() . PHP_EOL . $this->db->error . PHP_EOL . $query . PHP_EOL, FILE_APPEND);
+
+                return [
+                    "status"  => "error",
+                    "action"  => "modal",
+                    "title" => "<b>ERROR CODE: " . getErrorCode() . "</b>",
+                    "message" => $this->db->error,
+                    "timeout" => null,
+                ];
             }
         }
 
@@ -39,7 +47,10 @@ abstract class Model implements \App\Interfaces\ModelInterface {
         }
 
 
-        return $result;
+        return [
+            "status" => "ok",
+            "data" => $result,
+        ];
     }
 
     public function getLastInsertedId() {

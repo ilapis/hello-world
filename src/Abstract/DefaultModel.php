@@ -2,51 +2,53 @@
 
 namespace App\Abstract;
 
+use App\PrepareResponse;
+
 class DefaultModel extends Model {
 
     public function get(string $table, array $collumns = null, array $where = null): array
     {
-        return $this->query(
-            "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where)
-        )[0];
+
+        return PrepareResponse::get([
+            "data" => $this->query("SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) )["data"][0]
+        ]);
     }
 
-    public function getList(string $table, array $collumns = null, array $where = null, array $filter = []): array
+    public function table(string $table, array $collumns = null, array $where = null, array $filter = []): array
     {
         $filter = htmlspecialchars($filter["orderBy"] ?? "", ENT_HTML5);
 
-        return [
-            "data" => $this->query(
-                "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) . " " . $filter
-            ),
+        return PrepareResponse::table([
+            "data" => $this->query( "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) . " " . $filter )["data"],
             "metadata" => [],
             "filter" => $filter,
-        ];
+        ]);
     }
 
-    public function saveRecord(string $table, array $data): array
+    public function save(string $table, array $data): array
     {
         unset($data["id"]);
         $array_keys = array_keys($data);
         $array_values = array_values($data);
         $query = "INSERT INTO `" . $table . "` (`" . implode("`, `", $array_keys) . "`) VALUES ('" . implode("', '", $array_values) . "');";
 
-        $this->query($query);
+        $qr = $this->query($query);
+
+        if ( $qr["status"] == "error" ) {
+
+            return PrepareResponse::redirectModal($qr);
+        }
 
         $data["id"] = $this->getLastInsertedId();
 
-        $response = [
-            "status"    => "ok",
-            "action"    => "modal",
-            "modal"     => "modal-inserted",
-            "message"   => "record inserted",
-            "data"      => $data,
-        ];
-
-        return $response;
+        return PrepareResponse::redirectModal([
+            "message" => "Record inserted",
+            "data" => $qr,
+            "id" => $data["id"],
+        ]);
     }
 
-    public function updateRecord(string $table, array $data): array
+    public function update(string $table, array $data): array
     {
         $querySet = "";
         foreach ( $data as $collumn => $value) {
@@ -59,17 +61,18 @@ class DefaultModel extends Model {
 
         $query = "UPDATE `" . $table . "` SET " . $querySet . " WHERE id = " . (int) $data["id"] . ";";
 
-        $this->query($query);
+        $qr = $this->query($query);
 
-        $response = [
-            "status"    => "ok",
-            "action"    => "modal",
-            "modal"     => "modal-updated",
-            "message"   => "record updated",
-            "data"      => $data,
-        ];
+        if ( $qr["status"] == "error" ) {
 
-        return $response;
+            return PrepareResponse::redirectModal($qr);
+        }
+
+        return PrepareResponse::redirectModal([
+            "message" => "Record updated",
+            "data" => $qr,
+            "id" => $data["id"],
+        ]);
     }
 
     private function where($where):string {

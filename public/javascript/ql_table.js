@@ -74,31 +74,34 @@
         function _get_buttons() {
 
             if ( options.addButtonLink !== undefined ) {
-
                 return `
-                <div style="height:calc(6rem - 1px);width:100%;">
+                <div style="height:calc(3rem - 1px);width:100%;">
                     <a href="${options.addButtonLink}" class="btn btn-primary" style="
                         margin: 2.5rem 1.25rem 0 0.5rem;
                         height: 3.5rem;
                         width: 3.5rem;
                         border-radius: 3rem;
-                        margin-top: -1.75rem;
+                        margin-top: -4.25rem;
                         position: absolute;
                         right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2.5rem;display: block;right: 1px;position: relative;"></i></a>
-                    <button class="btn btn-default" style="border: 1px solid #CCCCCC;
-                        float: left;
-                        margin: 2.5rem 0rem 1rem 1rem;">Export</button>
+                        
+                        <div class="row"  style="margin: 2.5rem 0rem 1rem 1rem;">
+                        <div class="col-sm-6">
+                            <button class="btn btn-default" style="border: 1px solid #CCCCCC;float: left;">Export</button>
+                        </div>
+                        
+                        <div class="col-sm-6">
+                        <div class="input-group mb-3" style="right: 0.5rem;">
+                          <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search">
+                          <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
+                        </div></div>
+                        </div>
+                        
                 </div>
                 `;
             }
 
-            return `
-                <div style="height:calc(6rem - 1px);width:100%;">
-                    <button class="btn btn-default" style="border: 1px solid #CCCCCC;
-                        float: left;
-                        margin: 2.5rem 0rem 1rem 1rem;">Export</button>
-                </div>
-            `;
+            return ``;
         }
 
         function _get_table( options ) {

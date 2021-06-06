@@ -41,21 +41,19 @@ class LoginPageController extends AdminController {
 
         if ( password_verify(
             $httpRequest->getJson()['password'],
-            $administrator['password_hash'])
+            $administrator['data']['password_hash'])
         ) {
 
             Authorization::setRole(Roles::ADMINISTRATOR);
             Authorization::setAccess(Access::ADMIN);
 
             $this->response([
-                "valid" => true,
                 "action" => "redirect",
                 "redirect" => "/admin/dashboard",
             ]);
         }
 
         $this->response([
-            "valid" => false,
             "action" => "message",
             "element" => "#message_error",
             "message" => "Invalid login credentials",

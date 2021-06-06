@@ -51,4 +51,15 @@ abstract class AdminController extends Controller {
             )
         ;
     }
+
+    public function deleteConfirmation(HttpRequest $request) {
+        $this
+            ->addView(
+                template: "partials/admin/delete-confirmation.tpl",
+                model: [
+                    "id" => $request->getRouterParameter("id")
+                ]
+            );
+    }
+
 }

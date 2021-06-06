@@ -136,10 +136,14 @@ abstract class Controller implements ControllerInterface {
 
     public function output(): void
     {
-        /**
-         * @psalm-suppress UnresolvableInclude
-         */
-        include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
+        global $g_error_code;
+
+        if ( $g_error_code == "" ) {
+            /**
+             * @psalm-suppress UnresolvableInclude
+             */
+            include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
+        }
     }
 
     protected function isJSON(string $string): bool {

@@ -9,11 +9,11 @@
 </span>
 
 <div class="col-md-6">
-    <form id="inputs" class="row g-3 needs-validation" novalidate action="/admin/category/update/<?=$model['id']?>" data-method="post"></form>
+    <form id="inputs" class="row g-3 needs-validation" novalidate action="/admin/category/update/<?=$model['data']['id']?>" data-method="post"></form>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        $("#inputs").ql_form(<?=json_encode(App\Form\Admin\CategoryPageForm::get($model));?>);
+        $("#inputs").ql_form(<?=json_encode(App\Form\Admin\CategoryPageForm::get($model["data"]));?>);
     }, false);
 </script>

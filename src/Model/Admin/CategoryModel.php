@@ -4,11 +4,18 @@ namespace App\Model\Admin;
 
 use App\Abstract\DefaultModel;
 
-class CategoryModel extends DefaultModel {
+class CategoryModel {
 
-    public function table(array $filter): array
+    public function __construct (
+        private DefaultModel $model
+    ) {}
+
+    public function table(array $filter = []): array
     {
-        return $this->getList("category", ["id", "title", "enabled"], [], $filter);;
+        if ( $filter["orderBy"] == "") {
+            $filter["orderBy"] = "ORDER BY `id` DESC";
+        }
+        return $this->model->table("category", ["id", "title", "enabled"], [], $filter);;
     }
 
     public function save(array $data): array
@@ -17,13 +24,13 @@ class CategoryModel extends DefaultModel {
         $data["parent_id"] = $data["parent_id"] ?? 0;
         $data["order"] = $data["order"] ?? 0;
 
-        return $this->saveRecord("category", $data);
+        return $this->model->save("category", $data);
     }
 
     public function edit(int $id): array
     {
 
-        return $this->get(
+        return $this->model->get(
             table: "category",
             collumns: ["id", "title", "enabled"],
             where: ["id" => $id],
@@ -36,7 +43,7 @@ class CategoryModel extends DefaultModel {
         $data["parent_id"] = $data["parent_id"] ?? 0;
         $data["order"] = $data["order"] ?? 0;
 
-        return $this->updateRecord("category", $data);
+        return $this->model->update("category", $data);
     }
 
     public function delete(array $data): array

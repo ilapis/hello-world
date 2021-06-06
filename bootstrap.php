@@ -1,24 +1,42 @@
 <?php
 
+use App\PrepareResponse;
+
 ini_set('display_errors', 0);
 
-$g_error_code = getRandomString(8);
+$g_error_code = "";
 
 function errorHandler($errno, $errstr, $errfile, $errline) {
-    if ( str_contains($_SERVER['HTTP_ACCEPT'], 'text/html' ) ) {
-        echo "Klaidos kodas: <b>" . getErrorCode() . "</b><br/>";
-        logError( getErrorCode()  . PHP_EOL . date('Y-m-d H:i:s') . " ERROR: on line $errline in $errfile" . PHP_EOL . " [$errno] $errstr ");
-    };
+    logError( "ERROR: " . getErrorCode()  . PHP_EOL . date('Y-m-d H:i:s') . " ERROR: on line $errline in $errfile" . PHP_EOL . " [$errno] $errstr ");
+    if ( isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == "application/json" ) {
+        echo json_encode(
+            PrepareResponse::alertModal([
+                "status" => "error",
+                "message" => getErrorCode(),
+            ])
+        );
+    } else {
+        echo "Klaidos kodas: <b>" . getErrorCode() . "</b><br/>" . PHP_EOL;
+    }
+    exit(0);
 }
 
 function fatalErrorHandler()
 {
     $error = error_get_last();
     if( $error !== null ) {
-        if ( str_contains($_SERVER['HTTP_ACCEPT'], 'text/html' ) ) {
+        logError( "FATAL ERROR: " . getErrorCode()  . PHP_EOL . json_encode($error));
+        if (  isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == "application/json" ) {
+            echo json_encode(
+                PrepareResponse::alertModal([
+                    "status" => "error",
+                    "message" => getErrorCode(),
+                ])
+            );
+        } else {
             echo "Klaidos kodas: <b>" . getErrorCode() . "</b><br/>" . PHP_EOL;
-            logError( getErrorCode()  . PHP_EOL . json_encode($error));
         }
+        exit(0);
     }
 }
 register_shutdown_function("fatalErrorHandler");
@@ -48,6 +66,10 @@ function getRandomString($n) {
 function getErrorCode(): string {
 
     global $g_error_code;
+
+    if ( $g_error_code == "" ) {
+        $g_error_code = getRandomString(8);
+    }
 
     return $g_error_code;
 }

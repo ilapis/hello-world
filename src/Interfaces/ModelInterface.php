@@ -6,5 +6,5 @@ interface ModelInterface {
 
     function get(string $table, array $collumns = null, array $where = null): array;
 
-    function getList(string $table, array $collumns = null, array $where = null, array $filter = []): array;
+    function table(string $table, array $collumns = null, array $where = null, array $filter = []): array;
 }

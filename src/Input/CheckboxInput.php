@@ -4,14 +4,14 @@ namespace App\Input;
 
 class CheckboxInput {
 
-    public static function enabled(string $value = ""): array
+    public static function enabled(string $value = "", string $labelText = "Enabled"): array
     {
         return [
             "script" => "ql_checkbox",
             "inline" => true,
             "checked" => $value,
             "label" => [
-                "text" => "Enabled"
+                "text" => $labelText
             ],
             "input" => [
                 "id" => 'enabled',

@@ -13,7 +13,7 @@ class LoginModel extends DefaultModel {
             table: "administrators",
             collumns: ["password_hash", "access"],
             where: ["username" => $username, "enabled" => true],
-        )[0];
+        );
     }
 
 }

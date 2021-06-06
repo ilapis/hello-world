@@ -28,9 +28,39 @@
 
                     } );
 
-                    postData( form.action, form.getAttribute("data-method"), data ).then(response => {
+                    let action = form.action;
+
+                    postData( action, form.getAttribute("data-method"), data ).then(response => {
+
                         if ( response.action == "redirect" ) {
                             window.location.replace(response.redirect);
+                        }
+
+                        if ( response.action == "modal" || response.action == "modal-redirect" ) {
+
+                            let myModal = new bootstrap.Modal(document.getElementById(response.modal), {
+                                keyboard: false
+                            })
+
+                            document.getElementById(response.modal).addEventListener('shown.bs.modal', function () {
+
+                                if ( response.timeout != undefined ) {
+                                    setTimeout(function () {
+
+                                        if ( response.action == "modal-redirect" ) {
+                                            window.location.replace(response.redirect);
+                                        }
+
+                                        myModal.hide();
+
+                                    }, response.timeout);
+                                }
+                            })
+
+                            $("#" + response.modal).find(".modal-header").html(response.title);
+                            $("#" + response.modal).find(".modal-body").html(response.message);
+
+                            myModal.show();
                         }
 
                     });
