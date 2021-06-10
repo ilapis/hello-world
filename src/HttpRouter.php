@@ -68,7 +68,7 @@ class HttpRouter implements HttpRouterInterface {
                     if ( $this->patternMatches($routerUrl, $currentUrl) ) {
 
                         $replace = [];
-                        $this->request->clearRouterParameter($currentUrl);
+                        $this->request->clearRouterParameter();
 
                         foreach ( $routerUrl as $index => $routerUrlElement ) {
                             if ( str_contains($routerUrlElement, "{") ) {

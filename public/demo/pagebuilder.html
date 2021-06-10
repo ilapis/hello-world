@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Pagebuilder</title>
+    <style>
+        .indent {
+            text-indent: 1rem;
+        }
+        [data-template-holder] {
+            display: none;
+        }
+        .options {
+            height: 2rem;
+            width: calc(100% + 2rem);
+            margin: 0 1rem 1rem -1rem;
+            border-bottom: 1px solid #CCCCCC;
+        }
+        .wrapper, .wrapper-form {
+            border: 1px solid #333333;
+            padding: 1rem;
+        }
+        #builder {
+            width: calc(100% - 2rem);
+            height: 300px;
+            border: 1px solid #CCCCCC;
+            border-radius: 0;
+            padding: 1rem;
+            margin: 1rem;
+            overflow: auto;
+            height: calc(100% - 5rem);
+        }
+        #builder:focus-visible {
+            border: 1px solid #000000;
+            border-radius: 0;
+        }
+        #builder_menu {
+            width:200px;
+            height:300px;
+            border:1px solid #CCCCCC;
+            display:none;
+            background: #FFF;
+        }
+        [data-insert] {
+            padding: 0.5rem;
+            background: #FFFFFF;
+            color: var(--bs-blue);
+        }
+        [data-insert]:hover {
+            background: var(--bs-blue);
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<h1 class="indent">Pagebuilder</h1>
+<div id="builder" contenteditable="true" ></div>
+<div id="builder_menu" >
+    <div data-insert="heading" data-insert-value="1" >Header 1</div>
+    <div data-insert="heading" data-insert-value="2" >Header 2</div>
+    <div data-insert="paragraph" >Paragraph</div>
+    <div data-insert="bold" >Bold</div>
+    <div data-insert="underline" >Underline</div>
+    <div data-insert="italic" >Italic</div>
+    <div data-insert="__template" data-insert-template="datalist" >datalist</div>
+    <div data-insert="__template" data-insert-template="select" >select</div>
+    <div data-insert="__template" data-insert-template="form" >form</div>
+</div>
+
+<div data-template-holder="datalist">
+    <div class="options"></div>
+    <label for="exampleDataList" class="form-label">Datalist example</label>
+    <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+    <datalist id="datalistOptions">
+        <option value="San Francisco">
+        <option value="New York">
+        <option value="Seattle">
+        <option value="Los Angeles">
+        <option value="Chicago">
+    </datalist>
+</div>
+
+<div data-template-holder="select">
+    <div class="options"></div>
+    <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+</div>
+
+<div data-template-holder="form">
+    <div class="options"></div>
+    <form>
+        <fieldset>
+            <legend>Fieldset example</legend>
+        </fieldset>
+    </form>
+</div>
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+-->
+<script>
+    document.execCommand('useCSS', true);
+
+    $("#builder").contextmenu(function(e) {
+        e.preventDefault();
+        $("#builder_menu").show();
+        $("#builder_menu").offset({ top: e.pageY, left: e.pageX });
+    });
+
+    $(document).on('mousedown', "#builder_menu [data-insert]", function (e) {
+        e.preventDefault();
+    })
+
+    $(document).on('click', "#builder_menu [data-insert]", function(e) {
+        e.preventDefault();
+        $("#builder").focus();
+
+        let action = $(this).data("insert");
+        let value = $(this).data("insert-value");
+        let template = $(this).data("insert-template");
+
+        switch(action) {
+            case "heading":
+                document.execCommand('formatBlock', false, '<h' + value + '>');
+                break;
+            case "paragraph":
+                document.execCommand('formatBlock', false, '<p>');
+                break;
+            case "__template":
+                let wrapper = "<br/><div class='wrapper' contenteditable='false' >" + $("[data-template-holder='"+template+"']").html() + "</div><br/>";
+                document.execCommand('insertHTML', false, wrapper);
+                break;
+            default:
+                document.execCommand(action);
+                break;
+            // code block
+        }
+
+    });
+
+    $(document).on('click', function(e) {
+        e.preventDefault();
+        $("#builder_menu").hide();
+    });
+</script>
+</body>
+</html>

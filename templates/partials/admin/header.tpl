@@ -9,75 +9,17 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <link href="http://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+    <link href="/css/admin/default.css" rel="stylesheet">
 
 <?php if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) { ?>
     <link href="/css/sticky-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 <?php } ?>
 
     <title><?=$model["title"];?></title>
     <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-        .sidebar {
-            height: 100%;
-            background: #0d6efd;
-        }
-        .container {
-            height: 100%;
-        }
-        label {
-            line-height: 2.375rem;
-        }
-        form {
-            padding: 1rem 1rem 1.5rem 1rem;
-        }
-        .sidebar div a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            padding: 0.5rem 1rem;
-            color: #fff;
-            background: #0d6efd;
-            text-decoration: none;
-        }
-        .sidebar div {
-            line-height: 2rem;
-            font-size: 1rem;
-            border-bottom: 1px solid #CCCCCC;
-            background: #0d6efd;
-            color: #fff;
-        }
-        .sidebar div.selected {
-            line-height: 2rem;
-            font-size: 1rem;
-            border-bottom: 1px solid #CCCCCC;
-            width: calc(100% + 1px);
-            border-right: 1px solid #FFF;
-            background: #fff;
-            color: #0d6efd;
-        }
-        .sidebar div.selected a {
-            background: #fff;
-            color: #0d6efd;
-        }
-        table {
-                 width: 100%;
-                 height: 100%;
-                 overflow:auto;
-                 border-collapse: collapse;
-             }
-        table tr {
-            height: 3rem;
-            padding: 0 1rem;
-        }
-        table tr td {
-            padding: 0 1rem;
-        }
-        a {
-            text-indent: 0;
-        }
+
     </style>
 </head>
 <body>

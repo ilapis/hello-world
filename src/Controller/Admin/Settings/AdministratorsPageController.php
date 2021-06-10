@@ -10,6 +10,6 @@ class AdministratorsPageController extends AdminController {
     public function __construct (
         protected AdministratorsModel $model
     ) {
-        parent::__construct();
+        //parent::__construct();
     }
 }

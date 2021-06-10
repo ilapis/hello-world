@@ -1,1 +1,1 @@
-<div id="menu_top" style="height:3rem;width:100%;border-bottom: 1px solid #CCCCCC;"></div>
+<div id="menu_top" style="background:#0d6efd;height:3rem;width:100%;box-shadow: 0 10px 20px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);"></div>

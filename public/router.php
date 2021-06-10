@@ -96,6 +96,12 @@ $router
         roles: [ROLES::ADMINISTRATOR],
     )
     /* Default controller get index */
+    /*->add(
+        url: '/admin/{FOLDER}/{CONTROLLER}',
+        namespace: 'App\Controller\Admin\{FOLDER}\{CONTROLLER}PageController::index',
+        access: [ACCESS::ADMIN],
+        roles: [ROLES::ADMINISTRATOR],
+    )*/
     ->add(
         url: '/admin/{FOLDER}/{CONTROLLER}',
         namespace: 'App\Controller\Admin\{FOLDER}\{CONTROLLER}PageController::index',

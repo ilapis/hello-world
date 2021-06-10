@@ -8,14 +8,14 @@ abstract class AdminController extends Controller {
 
     public string $layout = "admin";
 
-    public function __construct() {
+    public function __defaultTemplates(): void {
 
         $this
             ->addView(
                 template: "partials/admin/header.tpl",
                 model:
                 [
-                "title" => "Administrator",
+                    "title" => "Administrator",
                 ],
                 position: "partial/admin/header"
             )
@@ -26,23 +26,23 @@ abstract class AdminController extends Controller {
             ->addView(
                 template: "partials/admin/sidebar.tpl",
                 model: ["links" => [
-                        [
-                            "text" => "Dashboard",
-                            "href" => "/admin/dashboard",
-                        ],
-                        [
-                            "text" => "Article",
-                            "href" => "/admin/article",
-                        ],
-                        [
-                            "text" => "Category",
-                            "href" => "/admin/category",
-                        ],
-                        [
-                            "text" => "Administrators",
-                            "href" => "/admin/settings/administrators",
-                        ]
-                ]],
+                [
+                    "text" => "Dashboard",
+                    "href" => "/admin/dashboard",
+                ],
+                [
+                    "text" => "Article",
+                    "href" => "/admin/article",
+                ],
+                [
+                    "text" => "Category",
+                    "href" => "/admin/category",
+                ],
+                [
+                    "text" => "Administrators",
+                    "href" => "/admin/settings/administrators",
+                ]
+            ]],
                 position:  "sidebar",
             )
             ->addView(
@@ -52,7 +52,22 @@ abstract class AdminController extends Controller {
         ;
     }
 
-    public function deleteConfirmation(HttpRequest $request) {
+    public function list(HttpRequest $request) {
+
+        $filter = $request->getParameter("filter");
+
+        if ( $this->isJSON($filter) ) {
+            $filter = json_decode($filter, true);
+        } else {
+            $filter = [];
+        }
+
+        return $this->response(
+            $this->model->table($filter)
+        );
+    }
+
+    public function deleteConfirmation(HttpRequest $request): void {
         $this
             ->addView(
                 template: "partials/admin/delete-confirmation.tpl",

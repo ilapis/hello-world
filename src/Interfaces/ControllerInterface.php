@@ -4,6 +4,7 @@ namespace App\Interfaces;
 
 interface ControllerInterface {
 
+    function __defaultTemplates(): void;
     function output(): void;
     function addView(string $template, array $model = [], string $position = "center"): ControllerInterface;
     function view(string $position): void;

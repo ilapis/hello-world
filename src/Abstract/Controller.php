@@ -134,6 +134,8 @@ abstract class Controller implements ControllerInterface {
         }
     }
 
+    public function __defaultTemplates(): void {}
+
     public function output(): void
     {
         global $g_error_code;
@@ -142,16 +144,16 @@ abstract class Controller implements ControllerInterface {
             /**
              * @psalm-suppress UnresolvableInclude
              */
+            $this->__defaultTemplates();
             include __DIR__ . "/../../layouts/default/" . $this->layout . ".php";
         }
     }
 
     protected function isJSON(string $string): bool {
-        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+        return is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
     }
 
     public function __destruct() {
         !$this->outputHTML ?: $this->output();
     }
-
 }

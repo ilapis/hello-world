@@ -10,7 +10,7 @@ class ArticlePageController extends AdminController {
     public function __construct (
         private LoginModel $model
     ) {
-        parent::__construct();
+        //parent::__construct();
     }
 */
 }

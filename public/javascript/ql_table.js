@@ -33,7 +33,7 @@
             $(data).find(".wrapper-sticky").each(function () {
 
                 let dataHeight = 0;
-                let bodyHeight = options.height - 2 - 3 * 16 - 6 * 16 - 8;
+                let bodyHeight = options.height - 2 - 3 * 16 - 8;
 
                 if (undefined !== options.data) {
                     dataHeight = (options.data.length + 1) * 48;

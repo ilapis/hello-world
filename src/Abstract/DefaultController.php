@@ -6,14 +6,13 @@ abstract class DefaultController extends Controller {
 
     public string $layout = "default";
 
-    public function __construct() {
-
+    public function __defaultTemplates(): void {
         $this
             ->addView(
                 template: "partials/header.tpl",
                 model: [
-                    "title" => "Homepage",
-                ],
+                "title" => "Homepage",
+            ],
                 position: "partial/header"
             )/*->addView(
                 template: "menu.tpl"
@@ -21,7 +20,7 @@ abstract class DefaultController extends Controller {
             ->addView(
                 template: "partials/footer.tpl",
                 position: "partial/footer",
-            );
+            )
+        ;
     }
-
 }
