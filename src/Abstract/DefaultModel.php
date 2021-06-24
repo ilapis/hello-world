@@ -16,11 +16,24 @@ class DefaultModel extends Model {
 
     public function table(string $table, array $collumns = null, array $where = null, array $filter = []): array
     {
-        $filter = htmlspecialchars($filter["orderBy"] ?? "", ENT_HTML5);
+
+        if ( $filter["orderBy"] == "") {
+            $filter["orderBy"] = "ORDER BY `id` DESC";
+        }
+
+        if ( is_int($filter["page"]) && is_int($filter["per_page"]) && $filter["page"] >= 1 ) {
+            $filter["limit"] = " LIMIT " . ($filter["page"] - 1) * $filter["per_page"] . ", " . $filter["per_page"];
+        }
+
+        $qfilter = htmlspecialchars($filter["orderBy"] ?? "", ENT_HTML5);
+        $qfilter = $qfilter . htmlspecialchars($filter["limit"] ?? "", ENT_HTML5);
 
         return PrepareResponse::table([
-            "data" => $this->query( "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) . " " . $filter )["data"],
-            "metadata" => [],
+            "data" => $this->query( "SELECT " . $this->collumns($collumns) . " FROM $table " . $this->where($where) . " " . $qfilter )["data"],
+            "metadata" => [
+                "records_total" => $this->query( "SELECT count(id) as records_total FROM $table " . $this->where($where) )["data"][0]["records_total"],
+                "records_page" => $filter["page"] ?? "1",
+            ],
             "filter" => $filter,
         ]);
     }
@@ -36,7 +49,7 @@ class DefaultModel extends Model {
 
         if ( $qr["status"] == "error" ) {
 
-            return PrepareResponse::redirectModal($qr);
+            return PrepareResponse::alertModal($qr);
         }
 
         $data["id"] = $this->getLastInsertedId();
@@ -65,7 +78,7 @@ class DefaultModel extends Model {
 
         if ( $qr["status"] == "error" ) {
 
-            return PrepareResponse::redirectModal($qr);
+            return PrepareResponse::alertModal($qr);
         }
 
         return PrepareResponse::redirectModal([
@@ -75,11 +88,34 @@ class DefaultModel extends Model {
         ]);
     }
 
+    public function delete(string $table, array $data): array
+    {
+        $where = "";
+        foreach ( $data as $collumn => $value) {
+            $where = "`" . $collumn . "` = '" . $value . "'";
+        }
+
+        $query = "DELETE FROM `" . $table . "` WHERE ". $where . ";";
+
+        $qr = $this->query($query);
+
+        if ( $qr["status"] == "error" ) {
+
+            return PrepareResponse::alertModal($qr);
+        }
+
+        return PrepareResponse::successModal([
+            "message" => "Record deleted",
+            "data" => $qr,
+            "id" => $data["id"],
+        ]);
+    }
+
     private function where($where):string {
 
         $partial_where = "";
 
-        if ( $where !== null && !empty($where) ) {
+        if ( $where !== null && !empty($where)  && is_array($where) ) {
             foreach ( $where as $collumn => $value ) {
 
                 if ( is_string($value) ) {

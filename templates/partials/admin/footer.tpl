@@ -12,10 +12,66 @@
 <script src="/javascript/ql_button.js"></script>
 <script src="/javascript/ql_builder_form.js"></script>
 
+<script>
+
+    async function postData(url = '', method = 'POST', data = {}) {
+        const response = await fetch(url, {
+            method: method,
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
+        });
+
+        return response.json();
+    }
+
+    function responseHandler(response) {
+
+        if ( response.action == "redirect" ) {
+            window.location.replace(response.redirect);
+        }
+
+        if ( response.action == "modal" || response.action == "modal-redirect" ) {
+
+            let myModal = new bootstrap.Modal(document.getElementById(response.modal), {
+                keyboard: false
+            })
+
+            document.getElementById(response.modal).addEventListener('shown.bs.modal', function () {
+
+                if ( response.timeout != undefined ) {
+                    setTimeout(function () {
+
+                        if ( response.action == "modal-redirect" ) {
+                            window.location.replace(response.redirect);
+                        }
+
+                        myModal.hide();
+
+                    }, response.timeout);
+                }
+            })
+
+            $("#" + response.modal).find(".modal-header").html(response.title);
+            $("#" + response.modal).find(".modal-body").html(response.message);
+
+            myModal.show();
+        }
+    }
+</script>
+
 <?php if ( App\Security\Access::PUBLIC !== App\Security\Authorization::getAccess() ) { ?>
 
 <?php include __DIR__ . "/../../modals/modal-inserted.tpl"; ?>
 <?php include __DIR__ . "/../../modals/modal-alert.tpl"; ?>
+<?php include __DIR__ . "/../../modals/modal-confirm.tpl"; ?>
+<?php include __DIR__ . "/../../modals/modal-success.tpl"; ?>
 
 <script src="/javascript/sticky-table.min.js"></script>
 <script src="/javascript/ql_table.js"></script>
@@ -29,6 +85,22 @@
     } else {
         $("a[href='" + window.location.pathname + "']").parent().addClass("selected");
     }
+
+    var modal_confirm = new bootstrap.Modal(document.getElementById("modal-confirm"), {
+        keyboard: false
+    })
+
+    $(document).on("click", "[data-popup]", function() {
+
+        let settings = $(this).data("popup");
+
+        if ( settings.type == "modal-confirm" ) {
+            $("#modal-confirm").find(".modal-body").html(settings.message);
+            $("#modal-confirm-button").data("settings", settings);
+            modal_confirm.show();
+        }
+    });
+
 </script>
 
 <?php } ?>

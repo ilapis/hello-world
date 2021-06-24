@@ -69,6 +69,20 @@ class PrepareResponse {
         return array_replace_recursive($response, $overwrite);
     }
 
+    public static function successModal(array $overwrite): array {
+
+        $response = [
+            "status"    => "ok",
+            "action"    => "modal",
+            "modal"     => "modal-success",
+            "message"   => null,
+            "timeout"   => "1000",
+            "data"      => null,
+        ];
+
+        return array_replace_recursive($response, $overwrite);
+    }
+
     public static function table(array $data): array {
 
         return $data;

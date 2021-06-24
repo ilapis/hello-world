@@ -10,7 +10,8 @@
         "fzaninotto/faker": "^1.5",
         "chrome-php/chrome": "^0.9.0",
         "php-webdriver/webdriver": "^1.10",
-        "phpunit/php-code-coverage": "^9.2"
+        "phpunit/php-code-coverage": "^9.2",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "vimeo/psalm": "^4.6",

@@ -4,7 +4,7 @@ namespace App\Model\Admin\Builder;
 
 use App\Abstract\DefaultModel;
 
-class FormModel {
+class FormPageModel {
 
     public function __construct (
         private DefaultModel $model
@@ -12,10 +12,6 @@ class FormModel {
 
     public function table(array $filter = []): array
     {
-        if ( $filter["orderBy"] == "") {
-            $filter["orderBy"] = "ORDER BY `id` DESC";
-        }
-
         return $this->model->table("builder_form", ["id", "title"], [], $filter);;
     }
 
@@ -41,6 +37,6 @@ class FormModel {
 
     public function delete(array $data): array
     {
-        return $data;
+        return $this->model->delete("builder_form", $data);
     }
 }

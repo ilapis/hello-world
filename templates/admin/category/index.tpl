@@ -4,10 +4,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         $("#table").ql_table({
             id: "ql_table",
-            height: $(document).height() - 3 * 16,
+            height: $(document).height() - 3 * 16 - 15,
             fixedHead: true,
             addButtonLink: "/admin/category/create",
             dataUrl: "/admin/category/list",
+            filterType: "realtime",
             collumns: [
                 {
                     cssStyle: {

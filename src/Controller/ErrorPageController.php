@@ -21,4 +21,11 @@ class ErrorPageController extends DefaultController {
         ;
     }
 
+    public function wrongRole(): void
+    {
+        $this
+            ->addView("error.tpl")
+        ;
+    }
+
 }

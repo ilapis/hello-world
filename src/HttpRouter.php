@@ -81,10 +81,12 @@ class HttpRouter implements HttpRouterInterface {
                         }
 
                         if (!$is_authorized) {
-                            return "NOT AUTHORIZED";
+
+                            return 'App\Controller\Admin\LoginPageController::index';
                         }
                         if (!$has_role) {
-                            return "WRONG ROLE";
+
+                            return 'App\Controller\Admin\ErrorPageController::wrongRole';
                         }
                         $this->redirect($route["redirect"]);
 

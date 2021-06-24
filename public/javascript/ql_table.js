@@ -2,21 +2,55 @@
 
     $.fn.ql_table = function( options ) {
 
-        var  filter = {"orderBy": "", "search": "", "searchIn": []};
+        let table = this;
+        let  filter = {"page": 1, "per_page": 15,"orderBy": "", "search": "", "searchIn": []};
+        let  initial_ws = $(window).height();
 
-        return this.each( function (index, data)  {
+        if ( options.filterType == undefined ) {
+            options.filterType = "data";
+            //realtime - make request to url
+            //data - filter from loaded data
+        }
 
+        if ( options.dataUrl !== undefined ) {
+
+            _getDataFromUrl(options, filter);
+        } else {
+            _get(this, options);
+        }
+
+        data_table_action( $(this).attr('id') );
+
+        $.fn.redraw = function () {
             if ( options.dataUrl !== undefined ) {
-                getData(options.dataUrl + "?filter=" + JSON.stringify(filter) ).then(json => {
-                    options.data = json.data;
-                    _get(data, options);
-                });
+                _getDataFromUrl(options, filter);
             } else {
-                _get(data, options);
+                _get(this, options);
             }
-        } );
+        }
+
+        $(document).on("click", "#" + $(this).attr('id') + " .page-item", function() {
+            if ( !$(this).attr("disabled") && filter.page != $(this).data("page") ) {
+                filter.page = $(this).data("page");
+                table.redraw();
+            }
+        });
+
+        return this;
+
+        function data_table_action( table_id ) {
+            $(document).on('click', "#"+table_id+" [data-table-action]", function () {
+                let selected = [];
+                $("#" + table_id + " [name=selected_id]:checked").each( function ( index, data ) {
+                    selected[index] = $(this).val();
+                });
+                options.optionCheckboxes.action( $(this).data('table-action'), selected );
+            });
+
+        }
 
         function _get(data, options) {
+
             $(data)
                 .html(`
                     ${_get_buttons()}
@@ -30,75 +64,87 @@
                 "top": "tbody tr:first-child"
             });
 
-            $(data).find(".wrapper-sticky").each(function () {
 
-                let dataHeight = 0;
-                let bodyHeight = options.height - 2 - 3 * 16 - 8;
-
-                if (undefined !== options.data) {
-                    dataHeight = (options.data.length + 1) * 48;
-                } else {
-                    height = bodyHeight;
-                }
-
-                let height = dataHeight;
-
-                if (bodyHeight < dataHeight) {
-                    height = bodyHeight;
-                }
-
-                $(this).height(bodyHeight);
-                $(this).find("table").height(height);
-
+            setHeight(options, data);
+            $(window).on('resize', function(){
+                setHeight(options, data);
             });
+
+            function setHeight(options, data) {
+
+                $(data).find(".wrapper-sticky").each(function () {
+                    let dataHeight = 0;
+                    let bodyHeight = options.height - 2 - 3 * 16 - 8;
+
+                    if (undefined !== options.data) {
+                        dataHeight = (options.data.length + 1) * 48;
+                    } else {
+                        height = bodyHeight;
+                    }
+
+                    let height = dataHeight;
+
+                    if (bodyHeight < dataHeight) {
+                        height = bodyHeight;
+                    }
+
+                    if ( options.optionCheckboxes != undefined ) {
+                        bodyHeight = bodyHeight - 48;
+                    }
+
+                    let diff = $(window).height() - initial_ws;
+                    $(this).height(bodyHeight + diff);
+                    $(this).find("table").height(height + diff);
+
+                    $(data)
+                        .css({"height": options.height  + diff + 'px'})
+                    ;
+
+                });
+            }
 
             $(document).off("click", "[data-sort]");
             $(document).on("click", "[data-sort]", function () {
 
-                if ($(this).hasClass("bi-sort-up")) {
-                    $(this).removeClass("bi-sort-up").addClass("bi-sort-down");
-                    filter.orderBy = "ORDER BY " + $(this).data("sort") + " DESC";
-                } else {
-                    $(this).removeClass("bi-sort-down").addClass("bi-sort-up");
-                    filter.orderBy = "ORDER BY " + $(this).data("sort") + " ASC";
+                if ( options.filterType == "data") {
+                    console.log(options.data);
                 }
 
-                getData(options.dataUrl + "?filter=" + JSON.stringify(filter) ).then(json => {
-                    options.data = json.data;
-                    _get(data, options);
-                });
+                if ( options.filterType == "realtime") {
+                    if ($(this).hasClass("bi-sort-up-alt")) {
+                        $(this).removeClass("bi-sort-up-alt").addClass("bi-sort-down");
+                        filter.orderBy = "ORDER BY " + $(this).data("sort") + " DESC";
+                    } else {
+                        $(this).removeClass("bi-sort-down").addClass("bi-sort-up-alt");
+                        filter.orderBy = "ORDER BY " + $(this).data("sort") + " ASC";
+                    }
+
+                    _getDataFromUrl(options, filter);
+                }
+
             })
 
         }
 
+        function _getDataFromUrl(options, filter) {
+            getData(options.dataUrl + "?filter=" + JSON.stringify(filter)).then(json => {
+                options.data = json.data;
+                options.metadata = json.metadata;
+                _get(table, options);
+            });
+        }
+
         function _get_buttons() {
 
-            if ( options.addButtonLink !== undefined ) {
-                return `
-                <div style="height:calc(3rem - 1px);width:100%;">
-                    <a href="${options.addButtonLink}" class="btn btn-primary" style="
-                        margin: 2.5rem 1.25rem 0 0.5rem;
-                        height: 3.5rem;
-                        width: 3.5rem;
-                        border-radius: 3rem;
-                        margin-top: -4.25rem;
-                        position: absolute;
-                        right: 0;"><i class="fs-2 bi bi-plus" style="line-height: 2.5rem;display: block;right: 1px;position: relative;"></i></a>
-                        
-                        <div class="row"  style="margin: 2.5rem 0rem 1rem 1rem;">
-                        <div class="col-sm-6">
-                            <button class="btn btn-default" style="border: 1px solid #CCCCCC;float: left;">Export</button>
-                        </div>
-                        
-                        <div class="col-sm-6">
-                        <div class="input-group mb-3" style="right: 0.5rem;">
-                          <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search">
-                          <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
-                        </div></div>
-                        </div>
-                        
-                </div>
-                `;
+            if ( options.optionCheckboxes !== undefined ) {
+
+                let buttons = "";
+
+                $(options.optionCheckboxes.buttons).each( function (index, data) {
+                    buttons = buttons + `<div class="btn btn-default" data-table-action="${data.action}"><i class="${data.className}"></i></div>`;
+                } );
+
+                return `<div id="table_buttons" >${buttons}</div>`;
             }
 
             return ``;
@@ -119,19 +165,48 @@
 
         function _get_pagination_row() {
 
+            let page_total = 0;
+            let page = 1;
+            let next = "disabled";
+            let prev = "disabled";
+
+            if ( options.metadata !== undefined  && options.data.length < parseInt(options.metadata.records_total) ) {
+                page_total = Math.ceil( parseInt(options.metadata.records_total) / 10.0);
+            } else {
+                page_total = Math.ceil(options.data.length / 10.0);
+            }
+
+            if ( options.metadata !== undefined  && 0 < parseInt(options.metadata.records_total) ) {
+                page = parseInt(options.metadata.records_page);
+            } else {
+                page = filter.page;
+            }
+
+            if ( page > 1 ) {
+                prev = `data-page="${page - 1}"`
+            }
+            if ( page < page_total - 1 ) {
+                next = `data-page="${page + 1}"`
+            }
+
+            let buttons = "";
+            for ( i = 1; i < page_total; ++i) {
+                let active = "";
+                if ( page == i ) {
+                    active = "active";
+                }
+                buttons = buttons + `<li class="page-item ${active}" data-page="${i}"><a class="page-link" href="#">${i}</a></li>`;
+            }
+
             return `
                     <div style="height:3rem;width:100%;">
                         <nav aria-label="...">
                           <ul class="pagination" style="    margin:0.5rem 1rem;">
-                            <li class="page-item disabled">
-                              <span class="page-link">Previous</span>
+                            <li class="page-item" ${prev}>
+                              <a class="page-link" href="#">Previous</a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item active" aria-current="page">
-                              <span class="page-link">2</span>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
+                            ${buttons}
+                            <li class="page-item" ${next}>
                               <a class="page-link" href="#">Next</a>
                             </li>
                           </ul>
@@ -148,43 +223,58 @@
 
                 let cell = "";
 
+                if ( options.optionCheckboxes !== undefined ) {
+                    cell = cell + `
+                        <td style="height:3rem;width:3rem;">
+                            <span>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" >
+                                </div>
+                            </span>
+                        </td>`;
+                }
+
                 Object.keys(options.collumns).forEach( colrow => {
-                    if ( data[0][options.collumns[colrow].key] !== undefined ) {
 
-                        let title = options.collumns[colrow].key;
-                        let cssStyle = "";
+                    if ( data[0] !== undefined) {
 
-                        if ( options.collumns[colrow].title !== undefined ) {
-                            title = options.collumns[colrow].title;
-                        }
+                        if (data[0][options.collumns[colrow].key] !== undefined) {
 
-                        if ( options.collumns[colrow].cssStyle !== undefined && options.collumns[colrow].cssStyle.head !== undefined ) {
-                            cssStyle = options.collumns[colrow].cssStyle.head;
-                        }
+                            let title = options.collumns[colrow].key;
+                            let cssStyle = "";
 
-                        let sort_icon = "bi bi-sort-up";
-                        let sort_data = `data-sort="${title}"`;
+                            if (options.collumns[colrow].title !== undefined) {
+                                title = options.collumns[colrow].title;
+                            }
 
-                        if ( filter.orderBy == `ORDER BY ${title} DESC` ) {
-                            sort_icon = "bi bi-sort-down";
-                            sort_data = `data-sort="${title}"`;
-                        }
+                            if (options.collumns[colrow].cssStyle !== undefined && options.collumns[colrow].cssStyle.head !== undefined) {
+                                cssStyle = options.collumns[colrow].cssStyle.head;
+                            }
 
-                        if ( filter.orderBy == `ORDER BY ${title} ASC` ) {
-                            sort_icon = "bi bi-sort-up";
-                            sort_data = `data-sort="${title}"`;
-                        }
+                            let sort_icon = "bi bi-sort-down";
+                            let sort_data = `data-sort="${title}"`;
 
-                        if ( title == "" ) {
-                            sort_icon = "";
-                            sort_data = "";
-                        }
+                            if (filter.orderBy == `ORDER BY ${title} DESC`) {
+                                sort_icon = "bi bi-sort-down";
+                                sort_data = `data-sort="${title}"`;
+                            }
 
-                        cell = cell + `
+                            if (filter.orderBy == `ORDER BY ${title} ASC`) {
+                                sort_icon = "bi bi-sort-up-alt";
+                                sort_data = `data-sort="${title}"`;
+                            }
+
+                            if (title == "") {
+                                sort_icon = "";
+                                sort_data = "";
+                            }
+
+                            cell = cell + `
                         <td style="height:3rem;${cssStyle}">
                             <i class="${sort_icon}" ${sort_data}></i>
                             <span>${title}</span>
                         </td>`;
+                        }
                     }
                 });
 
@@ -193,6 +283,16 @@
                 for (let i = 0; i < data.length; i++ ) {
                     let cell = "";
                     let cssStyle = "";
+
+                    if ( options.optionCheckboxes !== undefined ) {
+                        cell = cell + `<td style="height:3rem;width:3rem;">
+                            <span>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="selected_id" value="${data[i].id}" >
+                                </div>
+                            </span>
+                        </td>`;
+                    }
 
                     Object.keys(options.collumns).forEach( colrow => {
                         if ( data[i][options.collumns[colrow].key] !== undefined ) {
@@ -250,6 +350,7 @@
 
             return response.json();
         }
+
     };
 
 }( jQuery ));

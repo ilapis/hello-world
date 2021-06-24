@@ -22,7 +22,6 @@ RUN echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini
     && echo "xdebug.client_port=9000" >> /usr/local/etc/php/conf.d/xdebug.ini
 	
 RUN apk add --no-cache zip libzip-dev
-#RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-install zip
 
 RUN docker-php-ext-install mysqli pdo_mysql
@@ -46,10 +45,10 @@ RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 # REDIS
 
-#RUN set -xe \
-#    && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
-#    && pecl install -o -f redis  \
-#    && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
-#    && rm -rf /usr/share/php \
-#    && rm -rf /tmp/* \
-#    && apk del  .phpize-deps
+RUN set -xe \
+    && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
+    && pecl install -o -f redis  \
+    && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini \
+    && rm -rf /usr/share/php \
+    && rm -rf /tmp/* \
+    && apk del  .phpize-deps
