@@ -12,6 +12,14 @@
             //data - filter from loaded data
         }
 
+        let table_width = "100%";
+        let filter_width = "0%";
+
+        if ( options.optionFilter != undefined ) {
+            table_width = "calc(100% - 300px)";
+            filter_width = "300px";
+        }
+
         if ( options.dataUrl !== undefined ) {
 
             _getDataFromUrl(options, filter);
@@ -44,7 +52,7 @@
                 $("#" + table_id + " [name=selected_id]:checked").each( function ( index, data ) {
                     selected[index] = $(this).val();
                 });
-                options.optionCheckboxes.action( $(this).data('table-action'), selected );
+                options.optionCheckboxes.action( table, $(this).data('table-action'), selected );
             });
 
         }
@@ -53,6 +61,7 @@
 
             $(data)
                 .html(`
+                    ${_get_filters()}
                     ${_get_buttons()}
                     ${_get_table(options)}
                     ${_get_pagination_row()}
@@ -136,18 +145,56 @@
 
         function _get_buttons() {
 
+            let buttons = "";
+
             if ( options.optionCheckboxes !== undefined ) {
-
-                let buttons = "";
-
                 $(options.optionCheckboxes.buttons).each( function (index, data) {
                     buttons = buttons + `<div class="btn btn-default" data-table-action="${data.action}"><i class="${data.className}"></i></div>`;
                 } );
-
-                return `<div id="table_buttons" >${buttons}</div>`;
             }
 
-            return ``;
+            if ( options.search !== undefined  && options.search === true ) {
+
+                buttons = buttons + `<span style="
+                    float: right;
+                    height: 3rem;
+                    margin-top: -0.25rem;
+                    width: 25%;">
+                    <input type="text" class="form-control" style="width:calc(100% - 5rem); float:left;margin-top: 0.5rem;
+                        margin-left: 1rem;
+                        border: none;
+                        border-bottom: 1px solid #CCCCCC;
+                        border-radius: 0;
+                        padding-left: 0;" placeholder="Ieškoti" />
+                    <button class="btn btn-default" style="padding:0;float:right;margin-right: 0.8125rem;
+                    margin-top: 0.4375rem;">
+                <a href="#" class="btn btn-primary"><i class="bi bi-search"></i></a></i>
+                </button>
+                </span>
+                `;
+            }
+
+            if ( buttons !== "" ) {
+                return `<div class="table_buttons" >${buttons}</div>`;
+            }
+
+            return "";
+        }
+
+        function _get_filters( options ) {
+
+            return `<div class="filter"></div>`;
+            /*
+            let data = options.data;
+
+            if ( data !== undefined ) {
+                return `
+                <table id="${options.id}">
+                    ${_get_body_rows(data)}
+                </table>
+                `;
+            }
+            */
         }
 
         function _get_table( options ) {
@@ -156,7 +203,7 @@
 
             if ( data !== undefined ) {
                 return `
-                <table id="${options.id}">
+                <table id="${options.id}" style="float:right;">
                     ${_get_body_rows(data)}
                 </table>
                 `;
@@ -199,7 +246,7 @@
             }
 
             return `
-                    <div style="height:3rem;width:100%;">
+                    <div class="table-pagination">
                         <nav aria-label="...">
                           <ul class="pagination" style="    margin:0.5rem 1rem;">
                             <li class="page-item" ${prev}>

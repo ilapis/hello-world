@@ -65,7 +65,7 @@ abstract class Controller implements ControllerInterface {
         $this->getControllerSettings('edit', (int) $request->getRouterParameter('id'));
     }
 
-    public function save(HttpRequest $request): void
+    public function save(HttpRequest $request)
     {
         $this->getModelSettings('save', $request->getJson());
     }

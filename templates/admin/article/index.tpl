@@ -4,7 +4,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         $("#table").ql_table({
             id: "ql_table",
-            height: $(document).height() - 3 * 16,
+            height: $(document).height() - 3 * 16 - 8 - 7,
             fixedHead: true,
             addButtonLink: "/admin/article/create",
             data: <?=json_encode([

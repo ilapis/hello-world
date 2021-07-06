@@ -27,20 +27,32 @@ abstract class AdminController extends Controller {
                 template: "partials/admin/sidebar.tpl",
                 model: ["links" => [
                 [
+                    "icon" => "<i class='bi bi-clipboard''></i>",
                     "text" => "Dashboard",
                     "href" => "/admin/dashboard",
                 ],
                 [
+                    "icon" => "<i class='bi bi-file-text'></i>",
                     "text" => "Article",
                     "href" => "/admin/article",
                 ],
                 [
+                    "icon" => "<i class='bi bi-card-list'></i>",
                     "text" => "Category",
                     "href" => "/admin/category",
                 ],
                 [
+                    "icon" => "<i class='bi bi-person-circle'></i>",
                     "text" => "Administrators",
                     "href" => "/admin/settings/administrators",
+                ],
+                [
+                    "text" => "Builder | Form",
+                    "href" => "/admin/builder/form",
+                ],
+                [
+                    "text" => "Uploader | Files",
+                    "href" => "/admin/uploader/file",
                 ]
             ]],
                 position:  "sidebar",

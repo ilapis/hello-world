@@ -15,7 +15,7 @@ $links = $model['links'];
 
     <?php foreach( $links as $link ) { ?>
     <div class="col-sm-12" style="line-height:2rem;font-size:1rem;border-bottom:1px solid #CCCCCC;height: 3rem;" >
-        <a href="<?=$link["href"]?>" ><?=$link["text"]?></a>
+        <a href="<?=$link["href"]?>" ><?=$link["icon"] ?? ""?> <?=$link["text"]?></a>
     </div>
     <?php } ?>
 </div>

@@ -15,6 +15,7 @@ services:
       - frontend
     volumes:
       - ./:/var/www/html/
+      - ./docker/php/config:/usr/local/etc/php
     working_dir: /var/www/html/
 #----------------------------------------------------
 #----- REDIS ----------------------------------------
@@ -23,18 +24,13 @@ services:
     image: 'bitnami/redis'
     env_file:
       - .env
-    #environment:
-    # ALLOW_EMPTY_PASSWORD is recommended only for development.
-    #  - ALLOW_EMPTY_PASSWORD=yes
-    #  - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    #  - REDIS_PASSWORD=some_password_here
     command: /opt/bitnami/scripts/redis/run.sh --maxmemory ${REDIS_MAX_MEMMORY}
     networks:
       - backend
     ports:
       - '6379:6379'
     volumes:
-      - './docker/redis:/bitnami/redis/data'
+      - ./docker/redis:/bitnami/redis/data
 #----------------------------------------------------
 #----- NODEJS ---------------------------------------
 #----------------------------------------------------

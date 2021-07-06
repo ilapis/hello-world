@@ -8,11 +8,38 @@
 <script>
     let optionCheckboxes = {
         buttons: [
+            {action: 'filter', className: "bi bi-filter"},
             {action: 'archive', className: "bi bi-archive"},
             {action: 'delete', className: "bi bi-trash"}
         ],
-        action: function (action, options) {
-            console.log(action, options);
+        action: function (element, action, options) {
+            console.log(element, action, options);
+            if ( action == "filter") {
+
+                if ( $(element).find(".table-pagination").hasClass("filter-enabled") ) {
+                    $(element).find(".table-pagination").removeClass("filter-enabled");
+                } else {
+                    $(element).find(".table-pagination").addClass("filter-enabled");
+                }
+
+                if ( $(element).find(".filter").hasClass("filter-enabled") ) {
+                    $(element).find(".filter").removeClass("filter-enabled");
+                } else {
+                    $(element).find(".filter").addClass("filter-enabled");
+                }
+
+                if ( $(element).find(".wrapper-sticky").hasClass("filter-enabled") ) {
+                    $(element).find(".wrapper-sticky").removeClass("filter-enabled");
+                } else {
+                    $(element).find(".wrapper-sticky").addClass("filter-enabled");
+                }
+
+                if ( $(element).find(".table_buttons").hasClass("filter-enabled") ) {
+                    $(element).find(".table_buttons").removeClass("filter-enabled");
+                } else {
+                    $(element).find(".table_buttons").addClass("filter-enabled");
+                }
+            }
         }
     };
 
@@ -65,8 +92,9 @@
             fixedHead: true,
             dataUrl: "/admin/builder/form/list",
             filterType: "realtime",
+            search: true,
             optionCheckboxes: optionCheckboxes,
-            optionFilter: null,
+            optionFilter: {},
             collumns: [
                 collumn_id,
                 collumn_title,
